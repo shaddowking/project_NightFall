@@ -6,6 +6,8 @@
 
 class UInputMappingContext;
 class UInputAction;
+class UWeaponComponent;
+class AWeaponBase;
 
 UCLASS()
 class ANF_Player : public ACharacter
@@ -14,9 +16,21 @@ GENERATED_BODY()
 
 public:
 
+	ANF_Player();
+
+	bool bCanShoot = true;
+	UFUNCTION(BlueprintImplementableEvent)
+	void AttachWeaponToPlayer(AWeaponBase* currentweapon);
+
+	void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void CreateDebugLine(FVector start, FVector end);
 
 protected:
 
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<AWeaponBase> StartWeapon;
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputMappingContext* PlayerContext;
@@ -27,19 +41,35 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* ShootAction;
+
+
 	void BeginPlay()override;
 
+	
 
 	void SetupPlayerInputComponent(UInputComponent* playerInputComponent) override;
 
 	void HandleMovemnt(const FInputActionValue& value);
 	void HandleLook(const FInputActionValue& value);
+	void HandleWeaponFire();
+	void HandleWeaponRealse();
+
 
 	//Weapon
 
-	bool bCanShoot = true;
+	UPROPERTY()
+	UWeaponComponent* currentWeapon = nullptr;
 
+private:
 
+	//Weapon
 
+	FVector ViewOrigin;
+	FRotator ViewRotation;
+	FVector ViewForward;
 
+	UFUNCTION()
+	void EquipWeapon(AWeaponBase* weapon);
 };

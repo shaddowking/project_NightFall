@@ -57,31 +57,12 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	FVector ViewForward;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gun Stats")
-	float Damage = 10;
+	
 
 	UPROPERTY(BlueprintReadWrite)
 	ANF_Player* Owner = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gun Stats")
-	float TimeBetweenShots = 0.1f;
-
-	UPROPERTY(BlueprintReadOnly)
-	float CurrentAmmo = 0;
-
-	UPROPERTY(EditAnywhere, Category = "Gun Stats")
-	float MaxAmmo = 20;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gun Stats")
-	float ExtraAmmo = 100;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gun Stats")
-	float RelodeTime = 2;
-
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gun Stats")
-	float BulletSpeed = 2000;
+	
 
 	UPROPERTY()
 	AWeaponBase* OwningGun = nullptr;

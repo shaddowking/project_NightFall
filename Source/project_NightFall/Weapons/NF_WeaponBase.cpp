@@ -1,5 +1,6 @@
 #include "NF_WeaponBase.h"
 #include "NF_WeaponComponent.h"
+#include "../NF_ProjectilePoolComp.h"
 #include "NF_Projectile.h"
 #include "../NF_Player.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -21,11 +22,16 @@ AWeaponBase::AWeaponBase()
 	GunComponent->OnDeactivate.AddDynamic(this, &AWeaponBase::DeActivate);
 	
 	GunComponent->OwningGun = this;
+
+	projectilePoolComp = CreateDefaultSubobject<UProjectilePoolComp>("projectilePool");
+
 }
 
 void AWeaponBase::BeginPlay()
 {
-	GunComponent->CurrentAmmo = GunComponent->MaxAmmo;
+
+	Super::BeginPlay();
+	CurrentAmmo = MaxAmmo;
 
 
 
@@ -55,12 +61,12 @@ void AWeaponBase::SpawnBullet(FVector AimPoint, USceneComponent* GunFirePoint, f
 	FVector ShootDirection = AimPoint - GunFirePoint->GetComponentLocation();
 
 	
-	//CurentBullet = GunComponent->Owner->GetNextAvalableProjectile();
+	CurentBullet = projectilePoolComp->GetAvalableProjectile();
 
 	CurentBullet->SetActorLocationAndRotation(GunFirePoint->GetComponentLocation(), UKismetMathLibrary::MakeRotFromX(ShootDirection));
 
-	CurentBullet->Speed = GunComponent->BulletSpeed;
-	CurentBullet->Damage = GunComponent->Damage;
+	CurentBullet->Speed = BulletSpeed;
+	CurentBullet->Damage = Damage;
 	CurentBullet->ProjectileActivate();
 	CurentBullet = nullptr;
 	
