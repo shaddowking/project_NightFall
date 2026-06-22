@@ -12,4 +12,8 @@ GENERATED_BODY()
 public:
 
 	void GunFire() override;
+
+private:
+	
+
 };

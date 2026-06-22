@@ -50,7 +50,8 @@ void ANF_Player::SetupPlayerInputComponent(UInputComponent* playerInputComponent
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &ANF_Player::HandleWeaponFire);
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Completed, this, &ANF_Player::HandleWeaponRealse);
 
-		
+		EnhancedInputComponent->BindAction(RelodeAction, ETriggerEvent::Triggered, this, &ANF_Player::HandleRelode);
+
 
 
 	}
@@ -84,7 +85,7 @@ void ANF_Player::HandleLook(const FInputActionValue& value)
 
 void ANF_Player::HandleWeaponFire()
 {
-	if (currentWeapon)
+	if (currentWeapon && currentWeapon->OwningGun->bCanRelode == true && bCanShoot)
 	{
 		
 		GetController()->GetPlayerViewPoint(ViewOrigin, ViewRotation);
@@ -99,6 +100,14 @@ void ANF_Player::HandleWeaponRealse()
 	if (currentWeapon)
 	{
 		currentWeapon->RealeseWeapon();
+	}
+}
+
+void ANF_Player::HandleRelode()
+{
+	if (currentWeapon)
+	{
+		currentWeapon->RelodeWeapon();
 	}
 }
 

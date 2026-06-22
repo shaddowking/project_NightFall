@@ -20,8 +20,9 @@ AWeaponBase::AWeaponBase()
 	GunComponent->OnRealese.AddDynamic(this, &AWeaponBase::GunRealese);
 	GunComponent->OnActivate.AddDynamic(this, &AWeaponBase::WeaponActivate);
 	GunComponent->OnDeactivate.AddDynamic(this, &AWeaponBase::DeActivate);
+	GunComponent->OnRelode.AddDynamic(this, &AWeaponBase::GunRelode);
+
 	
-	GunComponent->OwningGun = this;
 
 	projectilePoolComp = CreateDefaultSubobject<UProjectilePoolComp>("projectilePool");
 
@@ -32,6 +33,7 @@ void AWeaponBase::BeginPlay()
 
 	Super::BeginPlay();
 	CurrentAmmo = MaxAmmo;
+	GunComponent->OwningGun = this;
 
 
 
@@ -43,6 +45,18 @@ void AWeaponBase::GunFire()
 
 void AWeaponBase::GunRealese()
 {
+}
+
+void AWeaponBase::GunRelode()
+{
+	if (ExtraAmmo > 0 && bCanRelode && ShootsFired > 0)
+	{
+
+		bCanRelode = false;
+		GetWorldTimerManager().SetTimer(RelodeTimerHandle, this, &AWeaponBase::RelodeFinished, RelodeTime, false);
+
+	}
+
 }
 
 void AWeaponBase::WeaponActivate()
@@ -58,6 +72,8 @@ void AWeaponBase::DeActivate()
 
 void AWeaponBase::SpawnBullet(FVector AimPoint, USceneComponent* GunFirePoint, float DamageModefire)
 {
+	ShootsFired++;
+	
 	FVector ShootDirection = AimPoint - GunFirePoint->GetComponentLocation();
 
 	
@@ -76,4 +92,23 @@ void AWeaponBase::ResetCanShoot()
 {
 	GunComponent->Owner->bCanShoot = true;
 
+}
+
+void AWeaponBase::RelodeFinished()
+{
+	
+	if (ShootsFired < ExtraAmmo)
+	{
+		CurrentAmmo = MaxAmmo;
+		ExtraAmmo -= ShootsFired;
+	}
+	else
+	{
+		CurrentAmmo += ExtraAmmo;
+		ExtraAmmo = 0;
+	}
+
+	//Update UI
+	bCanRelode = true;
+	ShootsFired = 0;
 }

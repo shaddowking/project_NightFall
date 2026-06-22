@@ -29,6 +29,12 @@ public:
 		OnRealese.Broadcast();
 	}
 
+	virtual void RelodeWeapon()
+	{
+		OnRelode.Broadcast();
+
+	}
+
 	void ActivateWeapon()
 	{
 		OnActivate.Broadcast();
@@ -45,6 +51,8 @@ public:
 	FNFWeaponSigniture OnShoot;
 	UPROPERTY(BlueprintAssignable)
 	FNFWeaponSigniture OnRealese;
+	UPROPERTY(BlueprintAssignable)
+	FNFWeaponSigniture OnRelode;
 	UPROPERTY(BlueprintAssignable)
 	FNFWeaponSigniture OnActivate;
 	UPROPERTY(BlueprintAssignable)

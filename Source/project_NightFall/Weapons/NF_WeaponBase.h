@@ -43,6 +43,10 @@ public:
 
 	UFUNCTION()
 	virtual void GunRealese();
+
+	UFUNCTION()
+	virtual void GunRelode();
+
 	UFUNCTION()
 	virtual void WeaponActivate();
 	UFUNCTION()
@@ -77,11 +81,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gun Stats")
 	float BulletSpeed = 2000;
 
+	bool bCanRelode = true;
+
 protected:
+
+	float ShootsFired = 0;
 
 	UPROPERTY();
 	ANFProjectile* CurentBullet = nullptr;
 
 	FTimerHandle WeaponTimerHandle;
+
+	void RelodeFinished();
+
+	FTimerHandle RelodeTimerHandle;
 
 };

@@ -18,8 +18,7 @@ void AFullAuto::GunFire()
 
 
 
-	FTimerHandle GunTimerHandle;
 
-	GetWorldTimerManager().SetTimer(GunTimerHandle, this, &AFullAuto::ResetCanShoot, TimeBetweenShots, false);
+	GetWorldTimerManager().SetTimer(WeaponTimerHandle, this, &AFullAuto::ResetCanShoot, TimeBetweenShots, false);
 
 }

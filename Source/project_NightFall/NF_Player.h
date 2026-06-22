@@ -44,6 +44,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* ShootAction;
 
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* RelodeAction;
+
 
 	void BeginPlay()override;
 
@@ -55,6 +58,7 @@ protected:
 	void HandleLook(const FInputActionValue& value);
 	void HandleWeaponFire();
 	void HandleWeaponRealse();
+	void HandleRelode();
 
 
 	//Weapon
