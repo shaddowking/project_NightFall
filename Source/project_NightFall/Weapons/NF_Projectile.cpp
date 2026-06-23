@@ -1,6 +1,7 @@
 #include "NF_Projectile.h"
 #include "Components/SphereComponent.h"
 #include "../NF_Player.h"
+#include "../NF_HealthComponent.h"
 
 ANFProjectile::ANFProjectile()
 {
@@ -57,16 +58,14 @@ void ANFProjectile::OnProjectileHit(UPrimitiveComponent* OverlappedComp, AActor*
 		ANFProjectile* hitprojectile = Cast<ANFProjectile>(HitActor);
 		if (HitActor && hitprojectile == nullptr && HitActor != Owningplayer)
 		{
-			// Readd when ading health component
 
-			/*
+			
 			UHealthComponent* healthComponent = HitActor->FindComponentByClass<UHealthComponent>();
 			if (healthComponent)
 			{
-				healthComponent->TakeDamage(Damage);
+				healthComponent->Damage(Damage);
 				healthComponent = nullptr;
 			}
-			*/
 
 		}
 

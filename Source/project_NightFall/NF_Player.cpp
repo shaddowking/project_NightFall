@@ -6,9 +6,18 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Weapons/NF_WeaponComponent.h"
 #include "Weapons/NF_WeaponBase.h"
+#include "NF_HealthComponent.h"
 
 ANF_Player::ANF_Player()
 {
+
+	HPComp = CreateDefaultSubobject<UHealthComponent>("HPComp");
+
+	HPComp->OnDamage.AddDynamic(this, &ANF_Player::OnDamage);
+	HPComp->OnDeath.AddDynamic(this, &ANF_Player::OnDeath);
+
+
+
 	PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -109,6 +118,14 @@ void ANF_Player::HandleRelode()
 	{
 		currentWeapon->RelodeWeapon();
 	}
+}
+
+void ANF_Player::OnDamage()
+{
+}
+
+void ANF_Player::OnDeath()
+{
 }
 
 void ANF_Player::EquipWeapon(AWeaponBase* weapon)

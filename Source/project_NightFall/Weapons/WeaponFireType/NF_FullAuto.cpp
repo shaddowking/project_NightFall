@@ -5,6 +5,7 @@ void AFullAuto::GunFire()
 {
 	GunComponent->Owner->bCanShoot = false;
 
+
 	FHitResult AimHit;
 	GetWorld()->LineTraceSingleByChannel(AimHit, GunComponent->ViewOrigin, GunComponent->ViewOrigin + GunComponent->ViewForward * 5000, ECollisionChannel::ECC_Visibility);
 	GunComponent->Owner->CreateDebugLine(GunComponent->ViewOrigin, GunComponent->ViewOrigin + GunComponent->ViewForward * 50000);
@@ -15,7 +16,7 @@ void AFullAuto::GunFire()
 	SpawnBullet(AimPoint, FirePoint);
 
 	CurrentAmmo--;
-
+	ShootsFired++;
 
 
 

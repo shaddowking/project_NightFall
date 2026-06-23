@@ -8,6 +8,7 @@ class UInputMappingContext;
 class UInputAction;
 class UWeaponComponent;
 class AWeaponBase;
+class UHealthComponent;
 
 UCLASS()
 class ANF_Player : public ACharacter
@@ -26,6 +27,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void CreateDebugLine(FVector start, FVector end);
+
+	UPROPERTY(BlueprintReadWrite)
+	UHealthComponent* HPComp = nullptr;
 
 protected:
 
@@ -66,7 +70,16 @@ protected:
 	UPROPERTY()
 	UWeaponComponent* currentWeapon = nullptr;
 
+	//
+
+	void OnDamage();
+
+	void OnDeath();
+
 private:
+
+
+
 
 	//Weapon
 
