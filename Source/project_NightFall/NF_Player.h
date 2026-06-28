@@ -71,9 +71,10 @@ protected:
 	UWeaponComponent* currentWeapon = nullptr;
 
 	//
-
+	UFUNCTION()
 	void OnDamage();
 
+	UFUNCTION()
 	void OnDeath();
 
 private:
