@@ -29,8 +29,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void DebugBuildGrid(FVector pos, float extend);
 
+	FVector GetClosestNode(FVector AimPoint);
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int CellSize = 100;
+	float CellSize = 100;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int Grid_X = 100;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -43,10 +45,18 @@ public:
 
 protected:
 
-
-
+	UPROPERTY(EditAnywhere)
+	TArray<TEnumAsByte<EObjectTypeQuery> > ObjectTypes;
+	TArray<AActor*> ActorsToIgnore;
+	TArray<AActor*> OutActors;
 
 private:
+
+
+	FNode ClosestNode;
+	float bestdistance = std::numeric_limits<float>::max();
+	float newDist;
+
 
 	FHitResult ValidHit;
 
@@ -57,5 +67,8 @@ private:
 	bool IsCellValid(FVector CellPos);
 
 	void GenerateBuildingGrid();
+
+
+
 
 };
