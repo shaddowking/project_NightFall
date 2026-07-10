@@ -43,6 +43,7 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FNode> ValidBuildGrid;
 
+
 protected:
 
 	UPROPERTY(EditAnywhere)

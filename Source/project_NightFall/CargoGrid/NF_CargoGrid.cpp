@@ -16,7 +16,7 @@ void ACargoGrid::Tick(float DeltaTime)
 	Super::Tick(DeltaTime); 
 	if (CurrentCargoBox)
 	{
-
+		SnapBoxToGrid();
 	}
 }
 
@@ -33,6 +33,8 @@ ACargoGrid::ACargoGrid()
 	CargoSnapingRange->SetupAttachment(root);
 	CargoSnapingRange->OnComponentBeginOverlap.AddDynamic(this, &ACargoGrid::OnCargoBoxEnter);
 	CargoSnapingRange->OnComponentEndOverlap.AddDynamic(this, &ACargoGrid::OnCargoBoxExit);
+
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void ACargoGrid::GenerateCargoGrid()
@@ -68,28 +70,39 @@ void ACargoGrid::GenerateCargoGrid()
 void ACargoGrid::SnapBoxToGrid()
 {
 	
-
-	CurrentNode = CargoGrid[0];
+	bCanPlaceBox = false;
 	bestdistance = std::numeric_limits<float>::max();
+	BoxGhost->SetActorHiddenInGame(false);
+
 	for (FCargoNode& node : CargoGrid) {
 
-		if (node.IsOcupide == false&& node.IsAvalable && BoxGhost->GetActorLocation() != node.Location)
+		if (node.IsOcupide == false&& node.IsAvalable)
 		{
 			newDist = FVector::Distance(CurrentCargoBox->GetActorLocation(), node.Location);
 			if (newDist < bestdistance)
 			{
+				bCanPlaceBox = true;
 				CurrentNode = node;
 				bestdistance = newDist;
 			}
 		}
 
 	}
-	BoxGhost->SetActorLocation(CurrentNode.Location);
+	if (bCanPlaceBox)
+	{
+		BoxGhost->SetActorLocation(CurrentNode.Location);
+	}
+	else
+	{
+		BoxGhost->SetActorHiddenInGame(true);
+
+	}
+	
 }
 
 void ACargoGrid::PlaceBox()
 {
-	if (BoxGhost)
+	if (BoxGhost && bCanPlaceBox)
 	{
 		CurrentCargoBox->SetActorLocation(BoxGhost->GetActorLocation());
 		CurrentCargoBox = nullptr;
@@ -97,7 +110,7 @@ void ACargoGrid::PlaceBox()
 		CargoGrid[CurrentNode.id].IsAvalable = false;
 		if (CurrentNode.id+ (CGrid_Y + CGrid_X) < CargoGrid.Num())
 		{
-			CargoGrid[CurrentNode.id + (CGrid_Y + CGrid_X)].IsAvalable = false;
+			CargoGrid[CurrentNode.id + (CGrid_Y + CGrid_X)].IsAvalable = true;
 
 		}
 	}
@@ -108,6 +121,7 @@ void ACargoGrid::OnCargoBoxEnter(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	CurrentCargoBox = Cast<AItemBox>(OtherActor);
 	if (CurrentCargoBox)
 	{
+		CurrentCargoBox->currentCargoGrid = this;
 		BoxGhost->SetActorHiddenInGame(false);
 	}
 	
@@ -115,8 +129,9 @@ void ACargoGrid::OnCargoBoxEnter(UPrimitiveComponent* OverlappedComp, AActor* Ot
 
 void ACargoGrid::OnCargoBoxExit(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (Cast<AItemBox>(OtherActor) && OtherActor == CurrentCargoBox)
+	if (OtherActor == CurrentCargoBox)
 	{
+		CurrentCargoBox->currentCargoGrid = nullptr;
 		CurrentCargoBox = nullptr;
 	}
 }

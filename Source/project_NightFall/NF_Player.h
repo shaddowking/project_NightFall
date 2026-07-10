@@ -9,6 +9,17 @@ class UInputAction;
 class UWeaponComponent;
 class AWeaponBase;
 class UHealthComponent;
+class AGravityProjector;
+
+UENUM(BlueprintType)
+enum class EPlayerEquipTyper : uint8
+{
+	Gun,
+	GravityProjector,
+	ability,
+	build
+};
+
 
 UCLASS()
 class ANF_Player : public ACharacter
@@ -21,7 +32,7 @@ public:
 
 	bool bCanShoot = true;
 	UFUNCTION(BlueprintImplementableEvent)
-	void AttachWeaponToPlayer(AWeaponBase* currentweapon);
+	void AttachWeaponToPlayer(AActor* currentweapon);
 
 	void Tick(float DeltaTime) override;
 
@@ -30,6 +41,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	UHealthComponent* HPComp = nullptr;
+
+	EPlayerEquipTyper EquipType;
 
 protected:
 
@@ -50,6 +63,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* RelodeAction;
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* GravProjectorAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* GravProjectorEditTetherAction;
 
 
 	void BeginPlay()override;
@@ -63,6 +81,9 @@ protected:
 	void HandleWeaponFire();
 	void HandleWeaponRealse();
 	void HandleRelode();
+	void HandleEquipGravProjector();
+	void HandleEditGravTether(const FInputActionValue& value);
+
 
 
 	//Weapon
@@ -71,6 +92,15 @@ protected:
 	UWeaponComponent* currentWeapon = nullptr;
 
 	//
+	//GravityProjector
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AGravityProjector> projectorTemplate;
+	UPROPERTY();
+	AGravityProjector* graveProjector = nullptr;
+
+	//
+
 	UFUNCTION()
 	void OnDamage();
 

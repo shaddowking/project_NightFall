@@ -7,6 +7,7 @@
 #include "Weapons/NF_WeaponComponent.h"
 #include "Weapons/NF_WeaponBase.h"
 #include "NF_HealthComponent.h"
+#include "CargoGrid/NF_GravityProjector.h"
 
 ANF_Player::ANF_Player()
 {
@@ -44,6 +45,15 @@ void ANF_Player::BeginPlay()
 	if (StartWeapon)
 	{
 		EquipWeapon(GetWorld()->SpawnActor<AWeaponBase>(StartWeapon));
+		EquipType = EPlayerEquipTyper::Gun;
+	}
+
+	if (projectorTemplate)
+	{
+		graveProjector = GetWorld()->SpawnActor<AGravityProjector>(projectorTemplate);
+		AttachWeaponToPlayer(graveProjector);
+		graveProjector->owningplayer = this;
+		graveProjector->SetActorHiddenInGame(true);
 	}
 }
 
@@ -60,6 +70,10 @@ void ANF_Player::SetupPlayerInputComponent(UInputComponent* playerInputComponent
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Completed, this, &ANF_Player::HandleWeaponRealse);
 
 		EnhancedInputComponent->BindAction(RelodeAction, ETriggerEvent::Triggered, this, &ANF_Player::HandleRelode);
+		EnhancedInputComponent->BindAction(GravProjectorAction, ETriggerEvent::Triggered, this, &ANF_Player::HandleEquipGravProjector);
+		EnhancedInputComponent->BindAction(GravProjectorEditTetherAction, ETriggerEvent::Triggered, this, &ANF_Player::HandleEditGravTether);
+
+
 
 
 
@@ -94,13 +108,19 @@ void ANF_Player::HandleLook(const FInputActionValue& value)
 
 void ANF_Player::HandleWeaponFire()
 {
-	if (currentWeapon && currentWeapon->OwningGun->bCanRelode == true && bCanShoot)
+	GetController()->GetPlayerViewPoint(ViewOrigin, ViewRotation);
+
+	ViewForward = ViewRotation.Quaternion().GetForwardVector();
+
+	if (currentWeapon && currentWeapon->OwningGun->bCanRelode == true && bCanShoot && EquipType == EPlayerEquipTyper::Gun)
 	{
 		
-		GetController()->GetPlayerViewPoint(ViewOrigin, ViewRotation);
-
-		ViewForward = ViewRotation.Quaternion().GetForwardVector();
+		
 		currentWeapon->UseWeapon(ViewOrigin, ViewForward);
+	}
+	else if (EquipType == EPlayerEquipTyper::GravityProjector)
+	{
+		graveProjector->ProjectorTick();
 	}
 }
 
@@ -108,7 +128,15 @@ void ANF_Player::HandleWeaponRealse()
 {
 	if (currentWeapon)
 	{
+	}
+
+	if (currentWeapon && EquipType == EPlayerEquipTyper::Gun)
+	{
 		currentWeapon->RealeseWeapon();
+	}
+	else if (EquipType == EPlayerEquipTyper::GravityProjector)
+	{
+		graveProjector->ReleaseBox();
 	}
 }
 
@@ -117,6 +145,34 @@ void ANF_Player::HandleRelode()
 	if (currentWeapon)
 	{
 		currentWeapon->RelodeWeapon();
+	}
+}
+
+void ANF_Player::HandleEquipGravProjector()
+{
+	if (EquipType != EPlayerEquipTyper::GravityProjector)
+	{
+		graveProjector->SetActorHiddenInGame(false);
+		EquipType = EPlayerEquipTyper::GravityProjector;
+		currentWeapon->DeactivateWeapon();
+	}
+	else
+	{
+		graveProjector->SetActorHiddenInGame(true);
+		currentWeapon->ActivateWeapon();
+		EquipType = EPlayerEquipTyper::Gun;
+	}
+	
+}
+
+void ANF_Player::HandleEditGravTether(const FInputActionValue& value)
+{
+
+	const float ChangeValue = value.Get<float>();
+
+	if (EquipType == EPlayerEquipTyper::GravityProjector)
+	{
+		graveProjector->ChangeTetherDistance(ChangeValue);
 	}
 }
 

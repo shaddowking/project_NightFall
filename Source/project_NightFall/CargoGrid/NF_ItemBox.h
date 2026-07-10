@@ -2,10 +2,16 @@
 #include "GameFramework/Actor.h"
 #include "NF_ItemBox.generated.h"
 
+
+class ACargoGrid;
+
 UCLASS()
 class AItemBox : public AActor
 {
 GENERATED_BODY()
 
 public:
+
+	UPROPERTY();
+	ACargoGrid* currentCargoGrid = nullptr;
 };

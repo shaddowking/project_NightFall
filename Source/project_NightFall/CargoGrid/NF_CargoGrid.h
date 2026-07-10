@@ -26,6 +26,11 @@ GENERATED_BODY()
 
 public:
 
+	
+
+	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
+	void AddBox();
+
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 
@@ -61,7 +66,9 @@ public:
 
 
 	void GenerateCargoGrid();
+	UFUNCTION(BlueprintCallable)
 	void SnapBoxToGrid();
+	UFUNCTION(BlueprintCallable)
 	void PlaceBox();
 
 
@@ -71,11 +78,12 @@ public:
 	UFUNCTION()
 	void OnCargoBoxExit(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UPROPERTY(BlueprintReadWrite)
+	AItemBox* CurrentCargoBox = nullptr;
 
 private:
 
-	UPROPERTY()
-	AItemBox* CurrentCargoBox = nullptr;
+	bool bCanPlaceBox = true;
 
 	TArray<FCargoNode> CargoGrid;
 
