@@ -8,6 +8,7 @@
 #include "Weapons/NF_WeaponBase.h"
 #include "NF_HealthComponent.h"
 #include "CargoGrid/NF_GravityProjector.h"
+#include "AbilitySystem/NF_AbilitySystemComponent.h"
 
 ANF_Player::ANF_Player()
 {
@@ -17,6 +18,7 @@ ANF_Player::ANF_Player()
 	HPComp->OnDamage.AddDynamic(this, &ANF_Player::OnDamage);
 	HPComp->OnDeath.AddDynamic(this, &ANF_Player::OnDeath);
 
+	AbilityComp = CreateDefaultSubobject<UNF_AbilitySystemComp>("AbilityComponent");
 
 
 	PrimaryActorTick.bCanEverTick = true;
@@ -55,6 +57,14 @@ void ANF_Player::BeginPlay()
 		graveProjector->owningplayer = this;
 		graveProjector->SetActorHiddenInGame(true);
 	}
+
+	if (AbilityComp)
+	{
+		if (PrimaryAbility)
+		{
+			AbilityComp->GiveAbility(FGameplayAbilitySpec(PrimaryAbility, 1, static_cast<int32>(EGASAbilityInputID::Confirm), this));
+		}
+	}
 }
 
 void ANF_Player::SetupPlayerInputComponent(UInputComponent* playerInputComponent)
@@ -75,7 +85,15 @@ void ANF_Player::SetupPlayerInputComponent(UInputComponent* playerInputComponent
 
 
 
-
+		if (AbilityComp && playerInputComponent)
+		{
+			AbilityComp->BindAbilityActivationToInputComponent(playerInputComponent, FGameplayAbilityInputBinds(
+				"Confirm",
+				"Cancel",
+				"EGASAbilityInputID",
+				static_cast<int32>(EGASAbilityInputID::Confirm),
+				static_cast<int32>(EGASAbilityInputID::Cancel)));
+		}
 
 	}
 }

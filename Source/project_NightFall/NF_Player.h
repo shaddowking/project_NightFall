@@ -10,6 +10,18 @@ class UWeaponComponent;
 class AWeaponBase;
 class UHealthComponent;
 class AGravityProjector;
+class UNF_AbilitySystemComp;
+class UGameplayAbility;
+
+UENUM(BlueprintType)
+enum class EGASAbilityInputID : uint8
+{
+	None UMETA(DisplayName = "None"),
+	Confirm UMETA(DisplayName = "Confirm"),
+	Cancel UMETA(DisplayName = "Cancel")
+
+};
+
 
 UENUM(BlueprintType)
 enum class EPlayerEquipTyper : uint8
@@ -42,7 +54,13 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	UHealthComponent* HPComp = nullptr;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability")
+	UNF_AbilitySystemComp* AbilityComp = nullptr;
+
 	EPlayerEquipTyper EquipType;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayAbility> PrimaryAbility;
 
 protected:
 
