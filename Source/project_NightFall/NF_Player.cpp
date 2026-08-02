@@ -9,6 +9,9 @@
 #include "NF_HealthComponent.h"
 #include "CargoGrid/NF_GravityProjector.h"
 #include "AbilitySystem/NF_AbilitySystemComponent.h"
+#include "AbilitySystem/AbilityDataAsset.h"
+#include "UI/NF_HUD.h"
+#include "UI/NF_PlayerHUD.h"
 
 ANF_Player::ANF_Player()
 {
@@ -29,10 +32,43 @@ void ANF_Player::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void ANF_Player::GiveAbilityToPlayer(bool bIsPrimaryAbility,UAbilityDataAsset* abilityDAT)
+{
+	if (abilityDAT)
+	{
+
+		//UpdateAbilityUI(bIsPrimaryAbility, abilityDAT);
+
+		CurrentSpecHandle = AbilityComp->GiveAbility(FGameplayAbilitySpec(abilityDAT->abilityClass, 1, static_cast<int32>(EGASAbilityInputID::Confirm), this));
+		HudClass->PlayerHud->UpdateAbilityUI(bIsPrimaryAbility, abilityDAT,CurrentSpecHandle);
+
+		if (bIsPrimaryAbility)
+		{
+			if (abilityDAT->abilityClass != primaryAbility)
+			{
+				primaryAbility = abilityDAT->abilityClass;
+			}
+
+			primarySpecHandle = CurrentSpecHandle;
+		}
+		else
+		{
+			if (abilityDAT->abilityClass != secondaryAbility)
+			{
+				secondaryAbility = abilityDAT->abilityClass;
+			}
+
+			secondarySpecHandle = CurrentSpecHandle;
+		}
+	}
+}
+
+
+
 void ANF_Player::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	HudClass = Cast<A_NF_HUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -43,6 +79,8 @@ void ANF_Player::BeginPlay()
 		PlayerController = nullptr;
 
 	}
+
+	SetupAbilityUI();
 	
 	if (StartWeapon)
 	{
@@ -60,9 +98,9 @@ void ANF_Player::BeginPlay()
 
 	if (AbilityComp)
 	{
-		if (PrimaryAbility)
+		if (PrimaryAbilityDAT)
 		{
-			AbilityComp->GiveAbility(FGameplayAbilitySpec(PrimaryAbility, 1, static_cast<int32>(EGASAbilityInputID::Confirm), this));
+			GiveAbilityToPlayer(true, PrimaryAbilityDAT);
 		}
 	}
 }
@@ -126,6 +164,7 @@ void ANF_Player::HandleLook(const FInputActionValue& value)
 
 void ANF_Player::HandleWeaponFire()
 {
+	
 	GetController()->GetPlayerViewPoint(ViewOrigin, ViewRotation);
 
 	ViewForward = ViewRotation.Quaternion().GetForwardVector();
@@ -140,13 +179,15 @@ void ANF_Player::HandleWeaponFire()
 	{
 		graveProjector->ProjectorTick();
 	}
+	else if (CurrentActiveAbility && EquipType == EPlayerEquipTyper::ability)
+	{
+		CurrentActiveAbility->OnPrimaryPress();
+	}
 }
 
 void ANF_Player::HandleWeaponRealse()
 {
-	if (currentWeapon)
-	{
-	}
+	
 
 	if (currentWeapon && EquipType == EPlayerEquipTyper::Gun)
 	{
@@ -155,6 +196,10 @@ void ANF_Player::HandleWeaponRealse()
 	else if (EquipType == EPlayerEquipTyper::GravityProjector)
 	{
 		graveProjector->ReleaseBox();
+	}
+	else if (CurrentActiveAbility && EquipType == EPlayerEquipTyper::ability)
+	{
+		CurrentActiveAbility->OnPrimaryPress();
 	}
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Abilities/GameplayAbility.h"
 #include "NF_Player.generated.h"
 
 
@@ -12,6 +13,9 @@ class UHealthComponent;
 class AGravityProjector;
 class UNF_AbilitySystemComp;
 class UGameplayAbility;
+class UAbilityDataAsset;
+class A_NF_HUD;
+class UNF_AbilityBase;
 
 UENUM(BlueprintType)
 enum class EGASAbilityInputID : uint8
@@ -60,7 +64,33 @@ public:
 	EPlayerEquipTyper EquipType;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UGameplayAbility> PrimaryAbility;
+	UAbilityDataAsset* PrimaryAbilityDAT = nullptr;
+
+
+
+	UFUNCTION(BlueprintCallable)
+	void GiveAbilityToPlayer(bool bIsPrimaryAbility,UAbilityDataAsset* abilityDAT);
+
+	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
+	void UpdateAbilityUI(bool bIsPrimaryAbility, UAbilityDataAsset* abilityDAT);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetupAbilityUI();
+
+	UPROPERTY(BlueprintReadOnly)
+	A_NF_HUD* HudClass = nullptr;
+
+	UPROPERTY()
+	FGameplayAbilitySpecHandle CurrentSpecHandle;
+
+	UPROPERTY(BlueprintReadOnly)
+	FGameplayAbilitySpecHandle primarySpecHandle;
+
+	UPROPERTY(BlueprintReadOnly)
+	FGameplayAbilitySpecHandle secondarySpecHandle;
+
+	UPROPERTY()
+	UNF_AbilityBase* CurrentActiveAbility = nullptr;
 
 protected:
 
@@ -127,9 +157,13 @@ protected:
 
 private:
 
+	//Ability
 
+	TSubclassOf<UGameplayAbility> primaryAbility;
 
+	TSubclassOf<UGameplayAbility> secondaryAbility;
 
+	//----------
 	//Weapon
 
 	FVector ViewOrigin;
