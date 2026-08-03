@@ -92,6 +92,13 @@ public:
 	UPROPERTY()
 	UNF_AbilityBase* CurrentActiveAbility = nullptr;
 
+
+	UFUNCTION()
+	void StartResetShoot(float time);
+
+	UFUNCTION()
+	void ResetPlayerCanShoot();
+
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon")
@@ -156,6 +163,8 @@ protected:
 	void OnDeath();
 
 private:
+
+	FTimerHandle shootTimerHandle;
 
 	//Ability
 

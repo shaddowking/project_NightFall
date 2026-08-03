@@ -11,6 +11,7 @@ void UGranadeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 	actorInfo = ActorInfo;
 	activationInfo = ActivationInfo;
 	triggerEventData = TriggerEventData;
+	bColldownActive = false;
 
 	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
@@ -63,11 +64,7 @@ void UGranadeAbility::OnPrimaryPress()
 		AGrenade* grenade = GetWorld()->SpawnActor<AGrenade>(grenadeTemplate, spawnPos, ViewRotation);
 		grenade->GrenadeCollision->AddImpulse(PlayerForward * 1000, "None", true);
 	}
-	player->CurrentActiveAbility = nullptr;
-	player->EquipType = EPlayerEquipTyper::Gun;
-
-	CommitAbilityCooldown(handle, actorInfo, activationInfo, true);
-	EndAbility(handle, actorInfo, activationInfo, true, false);
+	NF_AbilityEnd();
 
 
 

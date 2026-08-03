@@ -261,3 +261,15 @@ void ANF_Player::EquipWeapon(AWeaponBase* weapon)
 }
 
 
+
+void ANF_Player::StartResetShoot(float time)
+{
+	GetWorldTimerManager().SetTimer(shootTimerHandle, this, &ANF_Player::ResetPlayerCanShoot, time, false);
+
+}
+void ANF_Player::ResetPlayerCanShoot()
+{
+	bCanShoot = true;
+}
+
+

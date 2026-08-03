@@ -15,12 +15,19 @@ public:
 
 	virtual void OnSecondaryPress();
 
+	virtual void NF_AbilityEnd();
+
 
 	 FGameplayAbilitySpecHandle handle;
 	 const FGameplayAbilityActorInfo* actorInfo;
 	 FGameplayAbilityActivationInfo activationInfo;
 	 const FGameplayEventData* triggerEventData;
 
+	 UPROPERTY(BlueprintReadOnly)
+	 bool bColldownActive = false;
+
 	 UPROPERTY()
 	 ANF_Player* player = nullptr;
+
+
 };
