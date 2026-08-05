@@ -17,4 +17,7 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly)
 	FSlateBrush AbilityIcon;
+
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	FGameplayTag CooldownTag;
 };

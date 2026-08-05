@@ -17,7 +17,7 @@ void UGranadeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 
-	}
+	}	
 
 
 
@@ -26,24 +26,7 @@ void UGranadeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 	player->CurrentActiveAbility = this;
 	player->EquipType = EPlayerEquipTyper::ability;
 
-	/*
-	FVector viewOrigin;
-	FVector PlayerForward;
-	FRotator ViewRotation;
-
-	player->GetController()->GetPlayerViewPoint(viewOrigin, ViewRotation);
-
-	PlayerForward = ViewRotation.Quaternion().GetForwardVector();
-
-	if(player && grenadeTemplate)
-	{
-		FVector spawnPos = viewOrigin + PlayerForward * 300;
-		AGrenade* grenade = GetWorld()->SpawnActor<AGrenade>(grenadeTemplate, spawnPos, ViewRotation);
-		grenade->GrenadeCollision->AddImpulse(PlayerForward * 1000, "None",true);
-	}
-	CommitAbilityCooldown(Handle, ActorInfo, ActivationInfo, true);
-	EndAbility(Handle, ActorInfo, ActivationInfo,true,false);
-	*/
+	
 }
 
 void UGranadeAbility::OnPrimaryPress()

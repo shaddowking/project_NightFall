@@ -23,8 +23,10 @@ public:
 	 FGameplayAbilityActivationInfo activationInfo;
 	 const FGameplayEventData* triggerEventData;
 
-	 UPROPERTY(BlueprintReadOnly)
+	 UPROPERTY(BlueprintReadWrite)
 	 bool bColldownActive = false;
+
+	 bool bIsAbilityActive = false;
 
 	 UPROPERTY()
 	 ANF_Player* player = nullptr;

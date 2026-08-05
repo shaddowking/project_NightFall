@@ -102,6 +102,10 @@ void ANF_Player::BeginPlay()
 		{
 			GiveAbilityToPlayer(true, PrimaryAbilityDAT);
 		}
+		if (SecondaryAbilityDAT)
+		{
+			GiveAbilityToPlayer(false, SecondaryAbilityDAT);
+		}
 	}
 }
 
@@ -272,4 +276,53 @@ void ANF_Player::ResetPlayerCanShoot()
 	bCanShoot = true;
 }
 
+FVector ANF_Player::GetPlacablePoint(float Range, FVector& Normal)
+{
+
+	FVector Result;
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	FVector AimPoint = GetAimPoint(Range);
+	
+	Normal = AimHit.ImpactNormal;
+
+	if (AimHit.bBlockingHit == false)
+	{
+		GetWorld()->LineTraceSingleByChannel(AimHit, AimPoint, AimPoint + FVector::DownVector * Range, ECollisionChannel::ECC_Visibility, QueryParams);
+		Result = AimHit.bBlockingHit ? AimHit.Location : AimHit.TraceEnd;
+
+		Normal = AimHit.ImpactNormal;
+
+	}
+	else
+	{
+		Result = AimPoint;
+	}
+
+	return Result;
+}
+
+FVector ANF_Player::GetAimPoint(float Range)
+{
+
+
+	
+
+
+
+	GetController()->GetPlayerViewPoint(ViewOrigin, ViewRotation);
+
+	 ViewForward = ViewRotation.Quaternion().GetForwardVector();
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	GetWorld()->LineTraceSingleByChannel(AimHit, ViewOrigin, ViewOrigin + ViewForward * Range, ECollisionChannel::ECC_Visibility, QueryParams);
+
+	FVector AimPoint = AimHit.bBlockingHit ? AimHit.Location : AimHit.TraceEnd;
+
+	return AimPoint;
+}
 

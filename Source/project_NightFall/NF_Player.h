@@ -66,6 +66,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	UAbilityDataAsset* PrimaryAbilityDAT = nullptr;
 
+	UPROPERTY(EditAnywhere)
+	UAbilityDataAsset* SecondaryAbilityDAT = nullptr;
 
 
 	UFUNCTION(BlueprintCallable)
@@ -98,6 +100,10 @@ public:
 
 	UFUNCTION()
 	void ResetPlayerCanShoot();
+
+	FVector GetPlacablePoint(float Range, FVector& Normal);
+	FVector GetAimPoint(float Range);
+	FHitResult AimHit;
 
 protected:
 
