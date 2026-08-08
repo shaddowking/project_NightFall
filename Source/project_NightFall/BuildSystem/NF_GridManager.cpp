@@ -8,11 +8,20 @@ void ANF_GridManager::BeginPlay()
 
 	GenerateBuildingGrid();
 
-	for(FNode node : ValidBuildGrid)
+	/*
+	for(FChunk chunk : Chunks)
+	{
+		for(FNode node : chunk.NodesInChunk)
+		{
+			DebugBuildGrid(node.Location, CellSize);
+		}
+	}
+	
+	for (FNode node : ValidBuildGrid)
 	{
 		DebugBuildGrid(node.Location, CellSize);
 	}
-
+	*/
 }
 
 FVector ANF_GridManager::GetClosestNode(FVector AimPoint)
@@ -26,7 +35,7 @@ FVector ANF_GridManager::GetClosestNode(FVector AimPoint)
 			newDist = FVector::Distance(AimPoint, node.Location);
 			if (newDist < bestdistance)
 			{
-				ClosestNode = node;
+				ClosestNode = node;	
 				bestdistance = newDist;
 			}
 		}
@@ -75,11 +84,78 @@ void ANF_GridManager::GenerateBuildingGrid()
 					if (OutActors.Num() <= 0)
 					{
 						NewNode.Location = NewCell;
+						NewNode.id = x * Grid_X + y;
 						ValidBuildGrid.Add(NewNode);
+
 					}
 					
 				}
 			}
 		}
 	}
+
+	FChunk newChunk;
+	for (size_t x = 0; x < Chunk_X; x++)
+	{
+		for (size_t y = 0; y < Chunk_Y; y++)
+		{
+			newChunk.id = x * Chunk_X + y;
+			newChunk.Location = FVector{ ManagerPos.X + (x * CellSize*Chunk_X),ManagerPos.Y + (y * chunkSize*Chunk_Y),ManagerPos.Z };
+			Chunks.Add(newChunk);
+		}
+	}
+
+	XnodeAbounte = Grid_X / Chunk_X;
+	YnodeAbounte = Grid_Y / Chunk_Y;
+
+	for(FChunk& chunk : Chunks)
+	{
+		/*
+		for (size_t x = 0; x < XnodeAbounte; x++)
+		{
+			CX = x + XnodeAbounte * chunk.id;
+			for (size_t y = 0; y < YnodeAbounte; y++)
+			{
+				CY = y + YnodeAbounte * chunk.id;
+
+				index = CX * Grid_X + CY;
+				if (index > ValidBuildGrid.Num())
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Black, "Invlid ID");
+				}
+				else
+				{
+					chunk.NodesInChunk.Add(ValidBuildGrid[index]);
+
+				}
+			}
+		}
+		*/
+
+	
+
+		for (size_t y = 0; y < YnodeAbounte; y++)
+		{
+			CY = y + YnodeAbounte * chunk.id;
+			for (size_t x = 0; x < XnodeAbounte; x++)
+			{
+				CX = x + XnodeAbounte * chunk.id;
+				index = CX * Chunk_X + CY;
+				if (index > ValidBuildGrid.Num())
+				{
+					TX = x;
+					TY = y;
+					TID = chunk.id;
+					GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Black, "Invlid ID");
+				}
+				else
+				{
+					chunk.NodesInChunk.Add(ValidBuildGrid[index]);
+
+				}
+			}
+
+		}
+	}
+
 }

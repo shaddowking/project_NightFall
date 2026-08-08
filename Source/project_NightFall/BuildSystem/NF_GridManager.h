@@ -12,7 +12,22 @@ struct FNode
 
 	FVector Location;
 
+	int id;
+
 	bool IsOcupide = false;
+
+};
+
+USTRUCT(Blueprintable)
+struct FChunk
+{
+	GENERATED_BODY()
+
+	FVector Location;
+
+	int id;
+
+	TArray<FNode> NodesInChunk;
 
 };
 
@@ -29,6 +44,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void DebugBuildGrid(FVector pos, float extend);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void Debugchunk(int id);
+
 	FVector GetClosestNode(FVector AimPoint);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -39,9 +57,20 @@ public:
 	int Grid_Y = 100;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int Grid_Z = 100;	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int chunkSize = 100;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int Chunk_X = 10;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int Chunk_Y = 10;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int Chunk_Z = 10;
 	
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FNode> ValidBuildGrid;
+
+	TArray<FChunk> Chunks;
 
 
 protected:
@@ -70,6 +99,13 @@ private:
 	void GenerateBuildingGrid();
 
 
-
+	int CX;
+	int CY;
+	int index;
+	int XnodeAbounte;
+	int YnodeAbounte;
+	int TX;
+	int TY;
+	int TID;
 
 };
