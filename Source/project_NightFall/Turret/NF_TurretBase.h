@@ -1,0 +1,73 @@
+#pragma once
+
+#include "GameFramework/Actor.h"
+#include "../BuildSystem/NF_Buildable.h"
+#include "NF_TurretBase.generated.h"
+
+class UProjectilePoolComp;
+class USphereComponent;
+class ANF_EnemyBase;
+
+UCLASS()
+class ANF_TurretBase : public ABuildable
+{
+	GENERATED_BODY()
+
+public:
+
+	ANF_TurretBase();
+
+	UPROPERTY(EditAnywhere)
+	UProjectilePoolComp* projectilePoolComp = nullptr;
+
+	UPROPERTY()
+	USceneComponent* Root = nullptr;
+
+
+	UPROPERTY()
+	USceneComponent* Aimpoint = nullptr;
+	UPROPERTY(EditAnywhere)
+	USphereComponent* TurretRange = nullptr;
+
+	virtual void TurretFire();
+
+	void BeginPlay()override;
+
+
+	UPROPERTY(EditDefaultsOnly)
+	float TimeBetweenFire = 1;
+
+	UPROPERTY(EditDefaultsOnly)
+	float turretDamage = 5;
+
+	UPROPERTY(EditDefaultsOnly)
+	float MaxTurretAmmo = 200;
+
+	float TurretAmmo;
+
+
+protected:
+
+	UFUNCTION()
+	void OnEnemyEnter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnEnemyExit(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+private:
+
+	UPROPERTY()
+	ANF_EnemyBase* currentEnemy = nullptr;
+
+	UPROPERTY()
+	TArray<ANF_EnemyBase*> ValidTargets;
+
+	UPROPERTY()
+	TArray<AActor*> TargetsInRange;
+
+	UFUNCTION()
+	ANF_EnemyBase* FindNextTarget();
+
+	void UpdateTargetList();
+
+	float BestDistance;
+};

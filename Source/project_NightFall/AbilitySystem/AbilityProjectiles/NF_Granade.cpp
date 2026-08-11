@@ -3,7 +3,7 @@
 #include "../../NF_Player.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "../../NF_HealthComponent.h"
-
+#include "../../Enemy/NF_EnemyBase.h"
 
 
 AGrenade::AGrenade()
@@ -33,7 +33,7 @@ void AGrenade::GranadeExplode()
 {
 	TArray<AActor*> targets;
 	ActorsToIgnore.Add(this);
-	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), GetActorLocation(), ExplosionRadius, ObjectTypes, ACharacter::StaticClass(), ActorsToIgnore, targets);
+	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), GetActorLocation(), ExplosionRadius, ObjectTypes, ANF_EnemyBase::StaticClass(), ActorsToIgnore, targets);
 
 	if (targets.Num()> 0)
 	{

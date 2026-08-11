@@ -22,6 +22,7 @@ public:
 		if (CurrentHealth <= 0)
 		{
 			OnDeath.Broadcast();
+			bIsDead = true;
 		}
 	}
 
@@ -45,4 +46,6 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FNFHPSigniture OnDeath;
+
+	bool bIsDead = false;
 };

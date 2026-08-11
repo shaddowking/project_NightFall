@@ -31,13 +31,14 @@ void UMineAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 	{
 		MineTargeting = GetWorld()->SpawnActor(MineTargetingTemplate);
 	}
-
+	MineTargeting->SetActorHiddenInGame(false);
 	MineTick();
 }
 
 void UMineAbility::OnPrimaryPress()
 {
 	AMine* createdMine = GetWorld()->SpawnActor<AMine>(mineTemplate, TargetLocation, NormalDirection);
+	MineTargeting->SetActorHiddenInGame(true);
 
 	bIsAbilityActive = false;
 	NF_AbilityEnd();

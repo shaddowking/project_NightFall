@@ -1,6 +1,8 @@
 #include "NF_Mine.h"
 #include "Components/SphereComponent.h"
 #include "../../NF_Player.h"
+
+#include "../../Enemy/NF_EnemyBase.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "../../NF_HealthComponent.h"
 
@@ -23,7 +25,7 @@ void AMine::OnMineHit(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, U
 		
 		TArray<AActor*> targets;
 		ActorsToIgnore.Add(this);
-		UKismetSystemLibrary::SphereOverlapActors(GetWorld(), GetActorLocation(), ExplosionRadius, ObjectTypes, ACharacter::StaticClass(), ActorsToIgnore, targets);
+		UKismetSystemLibrary::SphereOverlapActors(GetWorld(), GetActorLocation(), ExplosionRadius, ObjectTypes, ANF_EnemyBase::StaticClass(), ActorsToIgnore, targets);
 
 		if (targets.Num() > 0)
 		{
