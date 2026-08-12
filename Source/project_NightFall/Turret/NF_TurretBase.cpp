@@ -15,10 +15,25 @@ ANF_TurretBase::ANF_TurretBase()
 	Aimpoint = CreateDefaultSubobject<USceneComponent>("Aimpoint");
 	Aimpoint->SetupAttachment(Root);
 
+	ZRotPoint = CreateDefaultSubobject<USceneComponent>("ZRotPoint");
+	ZRotPoint->SetupAttachment(Root);
+
+	YRotPoint = CreateDefaultSubobject<USceneComponent>("YRotPoint");
+	YRotPoint->SetupAttachment(ZRotPoint);
+	
+	FirePoint = CreateDefaultSubobject<USceneComponent>("FirePoint");
+	FirePoint->SetupAttachment(YRotPoint);
+
+
+
+
+
 	TurretRange = CreateDefaultSubobject<USphereComponent>("TurretRange");
 	TurretRange->SetupAttachment(Root);
 	TurretRange->OnComponentBeginOverlap.AddDynamic(this, &ANF_TurretBase::OnEnemyEnter);
 	TurretRange->OnComponentEndOverlap.AddDynamic(this, &ANF_TurretBase::OnEnemyExit);
+
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void ANF_TurretBase::TurretFire()
@@ -26,6 +41,11 @@ void ANF_TurretBase::TurretFire()
 	if (currentEnemy->HPComp->bIsDead)
 	{
 		currentEnemy = FindNextTarget();
+	}
+	else if(currentEnemy)
+	{
+		GetWorldTimerManager().SetTimer(turretTimerHandle, this, &ANF_TurretBase::TurretFire, TimeBetweenFire, false);
+
 	}
 }
 
@@ -36,11 +56,35 @@ void ANF_TurretBase::BeginPlay()
 	TurretAmmo = MaxTurretAmmo;
 }
 
+void ANF_TurretBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (currentEnemy)
+	{
+		TurretDirection = currentEnemy->GetActorLocation() - ZRotPoint->GetComponentLocation();
+		TurretRotation = UKismetMathLibrary::MakeRotFromX(TurretDirection);
+
+		ZRotPoint->SetRelativeRotation(FRotator{0,TurretRotation.Yaw,0});
+		YRotPoint->SetRelativeRotation(FRotator{ TurretRotation.Pitch,0,0});
+
+
+	}
+}
+
 void ANF_TurretBase::OnEnemyEnter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (Cast<ANF_EnemyBase>(OtherActor))
 	{
 		UpdateTargetList();
+		if (!currentEnemy)
+		{
+			currentEnemy = FindNextTarget();
+			if (currentEnemy)
+			{
+				TurretFire();
+			}
+		}
 	}
 	
 }
@@ -50,6 +94,10 @@ void ANF_TurretBase::OnEnemyExit(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	if (Cast<ANF_EnemyBase>(OtherActor))
 	{
 		UpdateTargetList();
+		if (OtherActor == currentEnemy)
+		{
+			currentEnemy = nullptr;
+		}
 	}
 }
 

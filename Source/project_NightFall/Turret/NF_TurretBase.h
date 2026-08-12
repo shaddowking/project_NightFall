@@ -7,6 +7,7 @@
 class UProjectilePoolComp;
 class USphereComponent;
 class ANF_EnemyBase;
+class ANFProjectile;
 
 UCLASS()
 class ANF_TurretBase : public ABuildable
@@ -23,15 +24,29 @@ public:
 	UPROPERTY()
 	USceneComponent* Root = nullptr;
 
-
-	UPROPERTY()
+	UPROPERTY(EditInstanceOnly)
+	USceneComponent* FirePoint = nullptr;
+	UPROPERTY(EditInstanceOnly)
 	USceneComponent* Aimpoint = nullptr;
+
+	UPROPERTY(EditInstanceOnly)
+	USceneComponent* YRotPoint = nullptr;
+
+	UPROPERTY(EditInstanceOnly)
+	USceneComponent* ZRotPoint= nullptr;
+
 	UPROPERTY(EditAnywhere)
 	USphereComponent* TurretRange = nullptr;
 
 	virtual void TurretFire();
 
+	virtual void UpdateTargetList();
+
+
 	void BeginPlay()override;
+
+	void Tick(float DeltaTime) override;
+
 
 
 	UPROPERTY(EditDefaultsOnly)
@@ -41,10 +56,14 @@ public:
 	float turretDamage = 5;
 
 	UPROPERTY(EditDefaultsOnly)
+	float BulletSpeed = 500;
+
+	UPROPERTY(EditDefaultsOnly)
 	float MaxTurretAmmo = 200;
 
 	float TurretAmmo;
 
+	FTimerHandle turretTimerHandle;
 
 protected:
 
@@ -52,8 +71,6 @@ protected:
 	void OnEnemyEnter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	void OnEnemyExit(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-private:
 
 	UPROPERTY()
 	ANF_EnemyBase* currentEnemy = nullptr;
@@ -67,7 +84,14 @@ private:
 	UFUNCTION()
 	ANF_EnemyBase* FindNextTarget();
 
-	void UpdateTargetList();
 
 	float BestDistance;
+
+	UPROPERTY()
+	ANFProjectile* CurentBullet = nullptr;
+
+private:
+
+	FVector TurretDirection;
+	FRotator TurretRotation;
 };

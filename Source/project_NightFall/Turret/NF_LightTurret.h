@@ -12,4 +12,6 @@ class ALightTurret : public ANF_TurretBase
 
 public:
 
+	void TurretFire() override;
+
 };
