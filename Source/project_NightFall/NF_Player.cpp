@@ -12,6 +12,7 @@
 #include "AbilitySystem/AbilityDataAsset.h"
 #include "UI/NF_HUD.h"
 #include "UI/NF_PlayerHUD.h"
+#include "BuildSystem/NF_BuildSystemComponent.h"
 
 ANF_Player::ANF_Player()
 {
@@ -20,6 +21,8 @@ ANF_Player::ANF_Player()
 
 	HPComp->OnDamage.AddDynamic(this, &ANF_Player::OnDamage);
 	HPComp->OnDeath.AddDynamic(this, &ANF_Player::OnDeath);
+
+	BuildModeComp = CreateDefaultSubobject<UBuildSystemComponent>("BuildSystemComponent");
 
 	AbilityComp = CreateDefaultSubobject<UNF_AbilitySystemComp>("AbilityComponent");
 

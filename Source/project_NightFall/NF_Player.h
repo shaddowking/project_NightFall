@@ -16,6 +16,7 @@ class UGameplayAbility;
 class UAbilityDataAsset;
 class A_NF_HUD;
 class UNF_AbilityBase;
+class UBuildSystemComponent;
 
 UENUM(BlueprintType)
 enum class EGASAbilityInputID : uint8
@@ -60,6 +61,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability")
 	UNF_AbilitySystemComp* AbilityComp = nullptr;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UBuildSystemComponent* BuildModeComp = nullptr;
 
 	EPlayerEquipTyper EquipType;
 
