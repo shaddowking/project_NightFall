@@ -47,7 +47,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void Debugchunk(int id);
 
-	FVector GetClosestNode(FVector AimPoint);
+	FNode GetClosestNode(FVector AimPoint);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float CellSize = 100;

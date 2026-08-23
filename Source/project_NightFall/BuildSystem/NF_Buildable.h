@@ -11,4 +11,14 @@ class ABuildable : public AActor
 
 public:
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetupGhost();
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetupCreatedBuilding();
+
+	UPROPERTY()
+	FString BuildingName;
+protected:
+
+
 };

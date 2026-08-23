@@ -16,4 +16,12 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ABuildable> buildingTemplate;
+
+	UPROPERTY(EditInstanceOnly)
+	FString BuildingName;
+
+	UPROPERTY(EditInstanceOnly)
+	int XGridSize = 0;
+	UPROPERTY(EditInstanceOnly)
+	int YGridSize = 0;
 };

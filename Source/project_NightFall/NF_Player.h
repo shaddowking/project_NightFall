@@ -133,6 +133,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* GravProjectorEditTetherAction;
 
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* OpenBuildmodeAction;
+
 
 	void BeginPlay()override;
 
@@ -147,6 +150,7 @@ protected:
 	void HandleRelode();
 	void HandleEquipGravProjector();
 	void HandleEditGravTether(const FInputActionValue& value);
+	void HandleStartBuildMode();
 
 
 

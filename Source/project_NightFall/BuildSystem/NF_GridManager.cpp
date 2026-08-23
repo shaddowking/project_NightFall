@@ -1,13 +1,14 @@
 #include "NF_GridManager.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "NF_SnapingPoints.h"
+#include "../NF_GameInstance.h"
 
 void ANF_GridManager::BeginPlay()
 {
 	Super::BeginPlay();
 
 	GenerateBuildingGrid();
-
+	Cast<UNF_GameInstance>(GetWorld()->GetFirstPlayerController()->GetGameInstance())->BuildGridManager = this;
 	/*
 	for(FChunk chunk : Chunks)
 	{
@@ -16,15 +17,15 @@ void ANF_GridManager::BeginPlay()
 			DebugBuildGrid(node.Location, CellSize);
 		}
 	}
-	
+	*/
 	for (FNode node : ValidBuildGrid)
 	{
 		DebugBuildGrid(node.Location, CellSize);
 	}
-	*/
+	
 }
 
-FVector ANF_GridManager::GetClosestNode(FVector AimPoint)
+FNode ANF_GridManager::GetClosestNode(FVector AimPoint)
 {
 	ClosestNode = ValidBuildGrid[0];
 	bestdistance = std::numeric_limits<float>::max();
@@ -42,7 +43,7 @@ FVector ANF_GridManager::GetClosestNode(FVector AimPoint)
 
 	}
 
-	return ClosestNode.Location;
+	return ClosestNode;
 }
 
 bool ANF_GridManager::IsCellValid(FVector CellPos)
@@ -94,6 +95,9 @@ void ANF_GridManager::GenerateBuildingGrid()
 		}
 	}
 
+	// Chunk Generatin script : currentlry not used
+
+	/*
 	FChunk newChunk;
 	for (size_t x = 0; x < Chunk_X; x++)
 	{
@@ -130,7 +134,7 @@ void ANF_GridManager::GenerateBuildingGrid()
 				}
 			}
 		}
-		*/
+		
 
 	
 
@@ -156,6 +160,10 @@ void ANF_GridManager::GenerateBuildingGrid()
 			}
 
 		}
+
+
 	}
+
+	*/
 
 }

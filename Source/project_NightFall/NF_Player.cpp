@@ -72,6 +72,7 @@ void ANF_Player::BeginPlay()
 {
 	Super::BeginPlay();
 	HudClass = Cast<A_NF_HUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	BuildModeComp->Player = this;
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -127,6 +128,8 @@ void ANF_Player::SetupPlayerInputComponent(UInputComponent* playerInputComponent
 		EnhancedInputComponent->BindAction(RelodeAction, ETriggerEvent::Triggered, this, &ANF_Player::HandleRelode);
 		EnhancedInputComponent->BindAction(GravProjectorAction, ETriggerEvent::Triggered, this, &ANF_Player::HandleEquipGravProjector);
 		EnhancedInputComponent->BindAction(GravProjectorEditTetherAction, ETriggerEvent::Triggered, this, &ANF_Player::HandleEditGravTether);
+
+		EnhancedInputComponent->BindAction(OpenBuildmodeAction, ETriggerEvent::Triggered, this, &ANF_Player::HandleStartBuildMode);
 
 
 
@@ -190,6 +193,10 @@ void ANF_Player::HandleWeaponFire()
 	{
 		CurrentActiveAbility->OnPrimaryPress();
 	}
+	if (BuildModeComp->bIsBuildModeActive && EquipType == EPlayerEquipTyper::build)
+	{
+		BuildModeComp->PlaceBuilding();
+	}
 }
 
 void ANF_Player::HandleWeaponRealse()
@@ -243,6 +250,29 @@ void ANF_Player::HandleEditGravTether(const FInputActionValue& value)
 	if (EquipType == EPlayerEquipTyper::GravityProjector)
 	{
 		graveProjector->ChangeTetherDistance(ChangeValue);
+	}
+	else if (EquipType == EPlayerEquipTyper::build)
+	{
+		BuildModeComp->SwitchBuilding(ChangeValue);
+	}
+}
+
+void ANF_Player::HandleStartBuildMode()
+{
+	if (EquipType != EPlayerEquipTyper::build)
+	{
+		BuildModeComp->BuildmodeStart();
+		EquipType = EPlayerEquipTyper::build;
+		currentWeapon->DeactivateWeapon();
+
+
+	}
+	else if (EquipType == EPlayerEquipTyper::build)
+	{
+		BuildModeComp->BuildmodeEnd();
+		EquipType = EPlayerEquipTyper::Gun;
+		currentWeapon->ActivateWeapon();
+
 	}
 }
 
