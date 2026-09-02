@@ -43,8 +43,10 @@ void UBuildSystemComponent::PlaceBuilding()
 {
 	if (bIsBuildModeActive)
 	{
+		currentNode = GameInstance->BuildGridManager->GetClosestNode(Player->GetPlacablePoint(BuildRage, PlacableNormal));
 		createdBuilding->SetActorLocation(TargetLocation);
 		createdBuilding->SetupCreatedBuilding();
+		createdBuilding->BuildingPlaced(currentBuildingDAT->XGridSize,currentBuildingDAT->YGridSize, currentNode.id,currentNode.Location,currentNode);
 
 		createdBuilding = nullptr;
 		BuildmodeEnd();

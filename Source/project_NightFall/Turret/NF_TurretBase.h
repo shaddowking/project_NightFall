@@ -49,6 +49,7 @@ public:
 
 
 
+
 	UPROPERTY(EditDefaultsOnly)
 	float TimeBetweenFire = 1;
 

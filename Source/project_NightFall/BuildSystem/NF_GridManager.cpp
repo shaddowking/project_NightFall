@@ -17,12 +17,12 @@ void ANF_GridManager::BeginPlay()
 			DebugBuildGrid(node.Location, CellSize);
 		}
 	}
-	*/
+	
 	for (FNode node : ValidBuildGrid)
 	{
 		DebugBuildGrid(node.Location, CellSize);
 	}
-	
+	*/
 }
 
 FNode ANF_GridManager::GetClosestNode(FVector AimPoint)
@@ -42,8 +42,27 @@ FNode ANF_GridManager::GetClosestNode(FVector AimPoint)
 		}
 
 	}
-
+	DebugSelectedNode(ClosestNode.Location, CellSize);
 	return ClosestNode;
+}
+
+void ANF_GridManager::SetNodesOcupide(int xNodes, int yNodes, int StartID, FVector NodePos, FNode StartNode)
+{
+	int IDStart = ValidBuildGrid.Find(StartNode);
+	int id = IDStart;
+	
+	
+	for (size_t x = 0; x < xNodes; x++)
+	{
+		for (size_t y = 0; y < yNodes; y++)
+		{
+			id = (IDStart + x) + (Grid_X * y);
+			ValidBuildGrid[id].IsOcupide = true;
+			DebugCreatedNode(ValidBuildGrid[id].Location, CellSize);
+
+		}
+	}
+	
 }
 
 bool ANF_GridManager::IsCellValid(FVector CellPos)
@@ -68,12 +87,12 @@ void ANF_GridManager::GenerateBuildingGrid()
 	FVector cellExtent = FVector{ CellSize,CellSize,CellSize };
 
 
-	for (size_t z = 0; z < Grid_Z; z++)
+	for (float z = 0; z < Grid_Z; z++)
 	{
 		
-		for (size_t x = 0; x < Grid_X; x++)
+		for (float x = 0; x < Grid_X; x++)
 		{
-			for (size_t y = 0; y < Grid_Y; y++)
+			for (float y = 0; y < Grid_Y; y++)
 			{
 				NewCell = FVector{ ManagerPos.X + (x * CellSize),ManagerPos.Y + (y * CellSize),ManagerPos.Z + (z * CellSize) };
 				if (IsCellValid(NewCell))
@@ -84,8 +103,9 @@ void ANF_GridManager::GenerateBuildingGrid()
 					ValidZLine.Add(z);
 					if (OutActors.Num() <= 0)
 					{
+						NewNode.GridLocation = FVector{ x,y,z };
 						NewNode.Location = NewCell;
-						NewNode.id = x * Grid_X + y;
+						NewNode.id = y * Grid_X + x;
 						ValidBuildGrid.Add(NewNode);
 
 					}

@@ -12,9 +12,21 @@ struct FNode
 
 	FVector Location;
 
+	FVector GridLocation;
+
 	int id;
 
 	bool IsOcupide = false;
+
+	bool operator==(const FNode& Other) const
+	{
+		return Location == Other.Location;
+	}
+
+	bool operator!=(const FNode& Other) const
+	{
+		return Location != Other.Location;
+	}
 
 };
 
@@ -45,6 +57,13 @@ public:
 	void DebugBuildGrid(FVector pos, float extend);
 
 	UFUNCTION(BlueprintImplementableEvent)
+	void DebugCreatedNode(FVector pos, float extend);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void DebugSelectedNode(FVector pos, float extend);
+
+
+	UFUNCTION(BlueprintImplementableEvent)
 	void Debugchunk(int id);
 
 	FNode GetClosestNode(FVector AimPoint);
@@ -72,6 +91,7 @@ public:
 
 	TArray<FChunk> Chunks;
 
+	void SetNodesOcupide(int xNodes, int yNodes, int StartID,FVector NodePos,FNode StartNode);
 
 protected:
 

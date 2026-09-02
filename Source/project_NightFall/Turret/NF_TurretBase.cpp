@@ -4,6 +4,8 @@
 #include "../Enemy/NF_EnemyBase.h"
 #include "../NF_HealthComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "../NF_GameInstance.h"
+#include "../BuildSystem/NF_GridManager.h"
 
 ANF_TurretBase::ANF_TurretBase()
 {
@@ -71,6 +73,8 @@ void ANF_TurretBase::Tick(float DeltaTime)
 
 	}
 }
+
+
 
 void ANF_TurretBase::OnEnemyEnter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
