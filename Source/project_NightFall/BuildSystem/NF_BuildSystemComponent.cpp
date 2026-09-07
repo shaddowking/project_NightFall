@@ -3,6 +3,7 @@
 #include "../NF_GameInstance.h"
 #include "NF_GridManager.h"
 #include "NF_BuildableDataAsset.h"
+#include "../Weapons/NF_WeaponComponent.h"
 
 void UBuildSystemComponent::BuildmodeStart()
 {
@@ -21,7 +22,7 @@ void UBuildSystemComponent::BuildmodeTick()
 {
 	if (Player)
 	{
-		currentNode = GameInstance->BuildGridManager->GetClosestNode(Player->GetPlacablePoint(BuildRage, PlacableNormal));
+		currentNode = GameInstance->BuildGridManager->GetClosestNode(Player->GetPlacablePoint(BuildRage, PlacableNormal),currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize);
 		TargetLocation = currentNode.Location;
 		if (createdBuilding)
 		{
@@ -41,15 +42,15 @@ void UBuildSystemComponent::BuildmodeTick()
 
 void UBuildSystemComponent::PlaceBuilding()
 {
-	if (bIsBuildModeActive)
+	if (bIsBuildModeActive && GameInstance->BuildGridManager->IsNodeGroupValid(currentNode, currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize))
 	{
-		currentNode = GameInstance->BuildGridManager->GetClosestNode(Player->GetPlacablePoint(BuildRage, PlacableNormal));
+		currentNode = GameInstance->BuildGridManager->GetClosestNode(Player->GetPlacablePoint(BuildRage, PlacableNormal),currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize);
 		createdBuilding->SetActorLocation(TargetLocation);
 		createdBuilding->SetupCreatedBuilding();
 		createdBuilding->BuildingPlaced(currentBuildingDAT->XGridSize,currentBuildingDAT->YGridSize, currentNode.id,currentNode.Location,currentNode);
 
 		createdBuilding = nullptr;
-		BuildmodeEnd();
+		BuildmodeEnd();	
 	}
 }
 
@@ -100,6 +101,8 @@ void UBuildSystemComponent::BuildmodeEnd()
 	bIsBuildModeActive = false;
 	
 	Player->StartResetShoot(1);
+	Player->EquipType = EPlayerEquipTyper::Gun;
+	Player->currentWeapon->ActivateWeapon();
 
 }
 

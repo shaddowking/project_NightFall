@@ -66,7 +66,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void Debugchunk(int id);
 
-	FNode GetClosestNode(FVector AimPoint);
+	FNode GetClosestNode(FVector AimPoint, int xNodes, int yNodes);
+
+	bool IsNodeGroupValid(FNode startnode, int xNodes, int yNodes);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float CellSize = 100;
@@ -127,5 +129,9 @@ private:
 	int TX;
 	int TY;
 	int TID;
+
+	int GroupStart;
+	int Currentid;
+	bool bGroupeIsValid;
 
 };

@@ -107,6 +107,8 @@ public:
 	FVector GetPlacablePoint(float Range, FVector& Normal);
 	FVector GetAimPoint(float Range);
 	FHitResult AimHit;
+	UPROPERTY()
+	UWeaponComponent* currentWeapon = nullptr;
 
 protected:
 
@@ -156,8 +158,7 @@ protected:
 
 	//Weapon
 
-	UPROPERTY()
-	UWeaponComponent* currentWeapon = nullptr;
+	
 
 	//
 	//GravityProjector

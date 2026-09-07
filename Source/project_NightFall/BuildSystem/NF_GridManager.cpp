@@ -25,13 +25,13 @@ void ANF_GridManager::BeginPlay()
 	*/
 }
 
-FNode ANF_GridManager::GetClosestNode(FVector AimPoint)
+FNode ANF_GridManager::GetClosestNode(FVector AimPoint, int xNodes, int yNodes)
 {
 	ClosestNode = ValidBuildGrid[0];
 	bestdistance = std::numeric_limits<float>::max();
 	for (FNode& node : ValidBuildGrid) {
 
-		if (node.IsOcupide == false)
+		if (IsNodeGroupValid(node,xNodes,yNodes))
 		{
 			newDist = FVector::Distance(AimPoint, node.Location);
 			if (newDist < bestdistance)
@@ -46,6 +46,46 @@ FNode ANF_GridManager::GetClosestNode(FVector AimPoint)
 	return ClosestNode;
 }
 
+bool ANF_GridManager::IsNodeGroupValid(FNode startnode, int xNodes, int yNodes)
+{
+	GroupStart = ValidBuildGrid.Find(startnode);
+	Currentid = GroupStart;
+	bGroupeIsValid = false;
+
+
+
+	for (size_t x = 0; x < xNodes; x++)
+	{
+		for (size_t y = 0; y < yNodes; y++)
+		{
+			Currentid = (GroupStart + x) + (Grid_Y * y);
+			
+			if (Currentid > ValidBuildGrid.Num()-1 || Currentid < 0)
+			{
+				//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Array oute of index");
+				return false;
+			}
+			
+			if (ValidBuildGrid[Currentid].IsOcupide == true)
+			{
+				bGroupeIsValid = false;
+				return false;
+			}
+			else
+			{
+				bGroupeIsValid = true;
+			}
+
+		}
+	}
+	if (bGroupeIsValid)
+	{
+		return true;
+	}
+	return false;
+
+}
+
 void ANF_GridManager::SetNodesOcupide(int xNodes, int yNodes, int StartID, FVector NodePos, FNode StartNode)
 {
 	int IDStart = ValidBuildGrid.Find(StartNode);
@@ -56,7 +96,7 @@ void ANF_GridManager::SetNodesOcupide(int xNodes, int yNodes, int StartID, FVect
 	{
 		for (size_t y = 0; y < yNodes; y++)
 		{
-			id = (IDStart + x) + (Grid_X * y);
+			id = (IDStart + x) + (Grid_Y * y);
 			ValidBuildGrid[id].IsOcupide = true;
 			DebugCreatedNode(ValidBuildGrid[id].Location, CellSize);
 
