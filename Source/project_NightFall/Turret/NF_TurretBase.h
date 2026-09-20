@@ -37,7 +37,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	USphereComponent* TurretRange = nullptr;
-
+	virtual bool CanShoot(ACharacter* target);
 	virtual void TurretFire();
 
 	virtual void UpdateTargetList();
@@ -48,7 +48,8 @@ public:
 	void Tick(float DeltaTime) override;
 
 
-
+	UPROPERTY(EditDefaultsOnly)
+	float InterpSpeed = 2;
 
 	UPROPERTY(EditDefaultsOnly)
 	float TimeBetweenFire = 1;

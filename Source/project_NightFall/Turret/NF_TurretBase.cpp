@@ -38,6 +38,11 @@ ANF_TurretBase::ANF_TurretBase()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+bool ANF_TurretBase::CanShoot(ACharacter* target)
+{
+	return false;
+}
+
 void ANF_TurretBase::TurretFire()
 {
 	if (currentEnemy->HPComp->bIsDead)
@@ -46,6 +51,7 @@ void ANF_TurretBase::TurretFire()
 	}
 	else if(currentEnemy)
 	{
+
 		GetWorldTimerManager().SetTimer(turretTimerHandle, this, &ANF_TurretBase::TurretFire, TimeBetweenFire, false);
 
 	}
@@ -67,9 +73,13 @@ void ANF_TurretBase::Tick(float DeltaTime)
 		TurretDirection = currentEnemy->GetActorLocation() - ZRotPoint->GetComponentLocation();
 		TurretRotation = UKismetMathLibrary::MakeRotFromX(TurretDirection);
 
+		// fix this
+		ZRotPoint->SetRelativeRotation(FMath::RInterpTo(ZRotPoint->GetComponentRotation(), FRotator{ 0,TurretRotation.Yaw,0 }, DeltaTime, InterpSpeed));
+		YRotPoint->SetRelativeRotation(FMath::RInterpTo(YRotPoint->GetComponentRotation(), FRotator{ TurretRotation.Pitch,0,0 }, DeltaTime, InterpSpeed));
+		/*
 		ZRotPoint->SetRelativeRotation(FRotator{0,TurretRotation.Yaw,0});
 		YRotPoint->SetRelativeRotation(FRotator{ TurretRotation.Pitch,0,0});
-
+		*/
 
 	}
 }
