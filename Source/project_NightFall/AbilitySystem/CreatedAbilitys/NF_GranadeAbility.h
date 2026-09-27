@@ -23,7 +23,8 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo, 
 		const FGameplayEventData* TriggerEventData) override;
 
-
+	UPROPERTY(EditAnywhere)
+	float TrowForce = 2000;
 
 
 	void OnPrimaryPress() override;

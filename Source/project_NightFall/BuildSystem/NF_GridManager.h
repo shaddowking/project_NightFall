@@ -134,4 +134,6 @@ private:
 	int Currentid;
 	bool bGroupeIsValid;
 
+
+	int Nodeid;
 };

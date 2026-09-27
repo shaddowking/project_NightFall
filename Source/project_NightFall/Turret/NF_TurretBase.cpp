@@ -68,18 +68,19 @@ void ANF_TurretBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (currentEnemy)
+	if (currentEnemy && bIsBuild)
 	{
 		TurretDirection = currentEnemy->GetActorLocation() - ZRotPoint->GetComponentLocation();
 		TurretRotation = UKismetMathLibrary::MakeRotFromX(TurretDirection);
 
-		// fix this
-		ZRotPoint->SetRelativeRotation(FMath::RInterpTo(ZRotPoint->GetComponentRotation(), FRotator{ 0,TurretRotation.Yaw,0 }, DeltaTime, InterpSpeed));
-		YRotPoint->SetRelativeRotation(FMath::RInterpTo(YRotPoint->GetComponentRotation(), FRotator{ TurretRotation.Pitch,0,0 }, DeltaTime, InterpSpeed));
-		/*
-		ZRotPoint->SetRelativeRotation(FRotator{0,TurretRotation.Yaw,0});
+		YTurretDirection = currentEnemy->GetActorLocation() - YRotPoint->GetComponentLocation();
+		YTurretRotation = UKismetMathLibrary::MakeRotFromX(TurretDirection);
+
+		ZRotPoint->SetRelativeRotation(FMath::RInterpTo(ZRotPoint->GetComponentRotation(), FRotator{ 0,TurretRotation.Yaw,0}, DeltaTime, InterpSpeed));
+
+		
 		YRotPoint->SetRelativeRotation(FRotator{ TurretRotation.Pitch,0,0});
-		*/
+		
 
 	}
 }
@@ -132,6 +133,12 @@ ANF_EnemyBase* ANF_TurretBase::FindNextTarget()
 	}
 
 	return enemy;
+}
+
+bool ANF_TurretBase::IsBetween(float value, float min, float max)
+{
+
+	return value > min && value < max;
 }
 
 void ANF_TurretBase::UpdateTargetList()

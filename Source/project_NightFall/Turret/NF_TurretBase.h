@@ -92,8 +92,18 @@ protected:
 	UPROPERTY()
 	ANFProjectile* CurentBullet = nullptr;
 
-private:
+	float TargetAngle;
+
+	bool IsBetween(float value, float min, float max);
 
 	FVector TurretDirection;
 	FRotator TurretRotation;
+
+	FVector YTurretDirection;
+	FRotator YTurretRotation;
+private:
+
+
+
+
 };

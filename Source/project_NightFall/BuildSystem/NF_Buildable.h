@@ -20,6 +20,8 @@ public:
 
 	UPROPERTY()
 	FString BuildingName;
+
+	bool bIsBuild = false;
 protected:
 
 

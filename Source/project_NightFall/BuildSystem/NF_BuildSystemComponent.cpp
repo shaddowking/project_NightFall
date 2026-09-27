@@ -24,7 +24,7 @@ void UBuildSystemComponent::BuildmodeTick()
 	{
 		currentNode = GameInstance->BuildGridManager->GetClosestNode(Player->GetPlacablePoint(BuildRage, PlacableNormal),currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize);
 		TargetLocation = currentNode.Location;
-		if (createdBuilding)
+		if (createdBuilding && GameInstance->BuildGridManager->IsNodeGroupValid(currentNode, currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize))
 		{
 			createdBuilding->SetActorLocation(TargetLocation);
 		}

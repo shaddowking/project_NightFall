@@ -37,25 +37,27 @@ void ALightTurret::TurretFire()
 
 bool ALightTurret::CanShoot(ACharacter* target)
 {
+	TargetActor = nullptr;
 	bestdistance = Radius * 10;
 	FTransform targetTransform = target->GetActorTransform();
 	FVector directionToTarget = (targetTransform.GetLocation() - GetActorLocation()).GetSafeNormal();
 	params.ClearIgnoredActors();
 	params.AddIgnoredActor(this);
 	params.AddIgnoredActor(target);
+	TurretDirection = currentEnemy->GetActorLocation() - ZRotPoint->GetComponentLocation();
+	TurretRotation = UKismetMathLibrary::MakeRotFromX(TurretDirection);
+	GetWorld()->LineTraceSingleByChannel(FovHit, GetActorLocation(), targetTransform.GetLocation(), ECollisionChannel::ECC_Visibility, params);
 
-	if (FVector::DotProduct(GetActorLocation(), directionToTarget) < angle)
+
+	if (IsBetween(ZRotPoint->GetComponentRotation().Yaw,TurretRotation.Yaw - angle, TurretRotation.Yaw + angle), !FovHit.bBlockingHit)
 	{
 		float distanceToTarget = FVector::Distance(GetActorLocation(), targetTransform.GetLocation());
-		GetWorld()->LineTraceSingleByChannel(FovHit, GetActorLocation(), targetTransform.GetLocation(), ECollisionChannel::ECC_Visibility, params);
-		if (!FovHit.bBlockingHit)
+		if (distanceToTarget < bestdistance)
 		{
-			if (distanceToTarget < bestdistance)
-			{
-				bestdistance = distanceToTarget;
-				TargetActor = target;
-			}
+			bestdistance = distanceToTarget;
+			TargetActor = target;
 		}
+		
 	}
 
 	return TargetActor != nullptr;

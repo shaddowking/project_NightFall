@@ -9,15 +9,8 @@ void ANF_GridManager::BeginPlay()
 
 	GenerateBuildingGrid();
 	Cast<UNF_GameInstance>(GetWorld()->GetFirstPlayerController()->GetGameInstance())->BuildGridManager = this;
-	/*
-	for(FChunk chunk : Chunks)
-	{
-		for(FNode node : chunk.NodesInChunk)
-		{
-			DebugBuildGrid(node.Location, CellSize);
-		}
-	}
 	
+	/*
 	for (FNode node : ValidBuildGrid)
 	{
 		DebugBuildGrid(node.Location, CellSize);
@@ -42,7 +35,6 @@ FNode ANF_GridManager::GetClosestNode(FVector AimPoint, int xNodes, int yNodes)
 		}
 
 	}
-	DebugSelectedNode(ClosestNode.Location, CellSize);
 	return ClosestNode;
 }
 
@@ -62,7 +54,6 @@ bool ANF_GridManager::IsNodeGroupValid(FNode startnode, int xNodes, int yNodes)
 			
 			if (Currentid > ValidBuildGrid.Num()-1 || Currentid < 0)
 			{
-				//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Array oute of index");
 				return false;
 			}
 			
@@ -89,19 +80,25 @@ bool ANF_GridManager::IsNodeGroupValid(FNode startnode, int xNodes, int yNodes)
 void ANF_GridManager::SetNodesOcupide(int xNodes, int yNodes, int StartID, FVector NodePos, FNode StartNode)
 {
 	int IDStart = ValidBuildGrid.Find(StartNode);
-	int id = IDStart;
+	Nodeid = IDStart;
+	
 	
 	
 	for (size_t x = 0; x < xNodes; x++)
 	{
 		for (size_t y = 0; y < yNodes; y++)
 		{
-			id = (IDStart + x) + (Grid_Y * y);
-			ValidBuildGrid[id].IsOcupide = true;
-			DebugCreatedNode(ValidBuildGrid[id].Location, CellSize);
+			Nodeid = (IDStart + x) + (Grid_Y * y);
+			ValidBuildGrid[Nodeid].IsOcupide = true;
+			if (ValidBuildGrid[Nodeid].IsOcupide == true)
+			{
+				DebugCreatedNode(ValidBuildGrid[Nodeid].Location, CellSize);
+
+			}
 
 		}
 	}
+	
 	
 }
 
@@ -134,7 +131,7 @@ void ANF_GridManager::GenerateBuildingGrid()
 		{
 			for (float y = 0; y < Grid_Y; y++)
 			{
-				NewCell = FVector{ ManagerPos.X + (x * CellSize),ManagerPos.Y + (y * CellSize),ManagerPos.Z + (z * CellSize) };
+				NewCell = FVector{ ManagerPos.X + (x * CellSize*2),ManagerPos.Y + (y * CellSize*2),ManagerPos.Z + (z * CellSize) };
 				if (IsCellValid(NewCell))
 				{
 					OutActors.Empty();
