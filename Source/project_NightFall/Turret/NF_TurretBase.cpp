@@ -89,7 +89,7 @@ void ANF_TurretBase::Tick(float DeltaTime)
 
 void ANF_TurretBase::OnEnemyEnter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (Cast<ANF_EnemyBase>(OtherActor))
+	if (Cast<ANF_EnemyBase>(OtherActor) && bIsBuild)
 	{
 		UpdateTargetList();
 		if (!currentEnemy)
@@ -106,7 +106,7 @@ void ANF_TurretBase::OnEnemyEnter(UPrimitiveComponent* OverlappedComp, AActor* O
 
 void ANF_TurretBase::OnEnemyExit(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (Cast<ANF_EnemyBase>(OtherActor))
+	if (Cast<ANF_EnemyBase>(OtherActor)&& bIsBuild)
 	{
 		UpdateTargetList();
 		if (OtherActor == currentEnemy)

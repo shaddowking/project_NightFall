@@ -7,7 +7,7 @@ void AFullAuto::GunFire()
 
 
 	FHitResult AimHit;
-	GetWorld()->LineTraceSingleByChannel(AimHit, GunComponent->ViewOrigin, GunComponent->ViewOrigin + GunComponent->ViewForward * 5000, ECollisionChannel::ECC_Visibility);
+	GetWorld()->LineTraceSingleByChannel(AimHit, GunComponent->ViewOrigin, GunComponent->ViewOrigin + GunComponent->ViewForward * BulletRange, ECollisionChannel::ECC_Visibility);
 	GunComponent->Owner->CreateDebugLine(GunComponent->ViewOrigin, GunComponent->ViewOrigin + GunComponent->ViewForward * 50000);
 	FVector AimPoint = AimHit.bBlockingHit ? AimHit.Location : AimHit.TraceEnd;
 

@@ -81,6 +81,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gun Stats")
 	float BulletSpeed = 2000;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gun Stats")
+	float BulletRange = 5000;
+
 	bool bCanRelode = true;
 
 protected:
