@@ -72,7 +72,7 @@ void AWeaponBase::DeActivate()
 
 void AWeaponBase::SpawnBullet(FVector AimPoint, USceneComponent* GunFirePoint, float DamageModefire)
 {
-	ShootsFired++;
+	
 	
 	FVector ShootDirection = AimPoint - GunFirePoint->GetComponentLocation();
 

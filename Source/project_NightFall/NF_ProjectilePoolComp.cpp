@@ -34,6 +34,7 @@ ANFProjectile* UProjectilePoolComp::GetAvalableProjectile()
 		if (projectile->IsActive == false)
 		{
 			AvalableProjectile = projectile;
+			return AvalableProjectile;
 		}
 	}
 	if (AvalableProjectile == nullptr)

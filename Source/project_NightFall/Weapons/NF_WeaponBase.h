@@ -20,6 +20,9 @@ public:
 	void BeginPlay() override;
 
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void DrawDebugLine(FVector A, FVector B);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* FirePoint = nullptr;
 

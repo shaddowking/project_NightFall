@@ -70,6 +70,22 @@ void ANF_TurretBase::Tick(float DeltaTime)
 
 	if (currentEnemy && bIsBuild)
 	{
+		FRotator curentRotation = ZRotPoint->GetComponentRotation();
+		TurretDirection = ZRotPoint->GetForwardVector();
+		FVector targetDirection = currentEnemy->GetActorLocation() - ZRotPoint->GetComponentLocation();
+		targetDirection.Normalize();
+		DebugTarget(currentEnemy->GetActorLocation());
+
+		YTurretRotation = UKismetMathLibrary::MakeRotFromX(targetDirection);
+		TurretDirection = UKismetMathLibrary::Vector_SlerpVectorToDirection(TurretDirection, targetDirection, 8.f * DeltaTime);
+		TurretRotation = UKismetMathLibrary::MakeRotFromX(TurretDirection);
+		ZRotPoint->SetWorldRotation(FRotator(0.f, TurretRotation.Yaw, 0.f));
+
+		YRotPoint->SetRelativeRotation(FRotator(YTurretRotation.Pitch, 0.f, 0.f));
+
+
+
+		/*
 		TurretDirection = currentEnemy->GetActorLocation() - ZRotPoint->GetComponentLocation();
 		TurretRotation = UKismetMathLibrary::MakeRotFromX(TurretDirection);
 
@@ -80,7 +96,7 @@ void ANF_TurretBase::Tick(float DeltaTime)
 
 		
 		YRotPoint->SetRelativeRotation(FRotator{ TurretRotation.Pitch,0,0});
-		
+		*/
 
 	}
 }

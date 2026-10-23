@@ -101,6 +101,14 @@ protected:
 
 	FVector YTurretDirection;
 	FRotator YTurretRotation;
+	UFUNCTION(BlueprintImplementableEvent)
+	void DebugTarget(FVector targetLocation);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void Debugdirection(FRotator direction);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void DrawDebugLine(FVector A, FVector B);
 private:
 
 

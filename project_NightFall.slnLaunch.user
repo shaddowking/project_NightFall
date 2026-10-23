@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "Intermediate\\ProjectFiles\\project_NightFall.vcxproj",
+        "Action": "StartWithoutDebugging"
+      },
+      {
+        "Path": "Intermediate\\ProjectFiles\\UE5.vcxproj",
+        "Action": "StartWithoutDebugging"
+      }
+    ]
+  }
+]

@@ -21,6 +21,7 @@ public:
 	UPROPERTY()
 	FString BuildingName;
 
+	UPROPERTY(EditAnywhere)
 	bool bIsBuild = false;
 protected:
 

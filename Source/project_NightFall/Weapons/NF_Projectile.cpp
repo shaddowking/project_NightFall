@@ -2,6 +2,7 @@
 #include "Components/SphereComponent.h"
 #include "../NF_Player.h"
 #include "../NF_HealthComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 ANFProjectile::ANFProjectile()
 {
@@ -52,9 +53,12 @@ void ANFProjectile::ProjectileDeActivate()
 
 void ANFProjectile::OnProjectileHit(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (IsActive)
+	if (IsActive && Cast<ANFProjectile>(OtherActor) == nullptr)
 	{
+		
 		AActor* HitActor = OtherActor;
+		FString targetName = UKismetSystemLibrary::GetDisplayName(HitActor);
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Target = %s"), *targetName));
 		ANFProjectile* hitprojectile = Cast<ANFProjectile>(HitActor);
 		if (HitActor && hitprojectile == nullptr && HitActor != Owningplayer)
 		{

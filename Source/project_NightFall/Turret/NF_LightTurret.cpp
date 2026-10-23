@@ -15,11 +15,10 @@ void ALightTurret::TurretFire()
 	if (CanShoot(currentEnemy))
 	{
 		FHitResult AimHit;
-		GetWorld()->LineTraceSingleByChannel(AimHit, Aimpoint->GetComponentLocation(), currentEnemy->GetActorLocation(), ECollisionChannel::ECC_Visibility);
+		GetWorld()->LineTraceSingleByChannel(AimHit, FirePoint->GetComponentLocation(), currentEnemy->GetActorLocation(), ECollisionChannel::ECC_Visibility);
 		FVector AimPoint = AimHit.bBlockingHit ? AimHit.Location : AimHit.TraceEnd;
 
-		FVector ShootDirection = AimPoint - Aimpoint->GetComponentLocation();
-
+		FVector ShootDirection = AimPoint - FirePoint->GetComponentLocation();
 
 		CurentBullet = projectilePoolComp->GetAvalableProjectile();
 
