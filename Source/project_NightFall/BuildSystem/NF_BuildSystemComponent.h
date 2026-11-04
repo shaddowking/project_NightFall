@@ -7,6 +7,7 @@ class ABuildable;
 class UBuildableDataAsset;
 class ANF_Player;
 class UNF_GameInstance;
+class ASnapingPoint;
 
 UCLASS()
 class UBuildSystemComponent : public UActorComponent 
@@ -45,8 +46,20 @@ protected:
 	UPROPERTY(EditInstanceOnly)
 	float BuildRage = 1000;
 
+	UPROPERTY(EditAnywhere)
+	TArray<TEnumAsByte<EObjectTypeQuery> > ObjectTypes;
+	TArray<AActor*> ActorsToIgnore;
+	TArray<AActor*> OutActors;
+
+
+
 private:
 
+	//Bool is only used if the current Building needs a snaping point
+	bool bIsOnSnapingPoint = false;
+
+	UPROPERTY();
+	ASnapingPoint* currentpoint = nullptr;
 
 	ABuildable* GetAvalableGhostBuilding(FString BuildingName);
 

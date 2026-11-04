@@ -4,6 +4,9 @@
 #include "NF_GridManager.h"
 #include "NF_BuildableDataAsset.h"
 #include "../Weapons/NF_WeaponComponent.h"
+#include "NF_BuildingTypeEnum.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "NF_SnapingPoints.h"
 
 void UBuildSystemComponent::BuildmodeStart()
 {
@@ -20,14 +23,43 @@ void UBuildSystemComponent::BuildmodeStart()
 
 void UBuildSystemComponent::BuildmodeTick()
 {
-	if (Player)
+	if (Player && createdBuilding)
 	{
-		currentNode = GameInstance->BuildGridManager->GetClosestNode(Player->GetPlacablePoint(BuildRage, PlacableNormal),currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize);
-		TargetLocation = currentNode.Location;
-		if (createdBuilding && GameInstance->BuildGridManager->IsNodeGroupValid(currentNode, currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize))
+		if (createdBuilding->buildtype == EBuildType::Grid)
 		{
-			createdBuilding->SetActorLocation(TargetLocation);
+			currentNode = GameInstance->BuildGridManager->GetClosestNode(Player->GetPlacablePoint(BuildRage, PlacableNormal), currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize);
+			TargetLocation = currentNode.Location;
+			if (createdBuilding && GameInstance->BuildGridManager->IsNodeGroupValid(currentNode, currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize))
+			{
+				createdBuilding->SetActorLocation(TargetLocation);
+			}
 		}
+		else if (createdBuilding->buildtype == EBuildType::Snappoint)
+		{
+			TargetLocation = Player->GetPlacablePoint(BuildRage, PlacableNormal);
+			UKismetSystemLibrary::BoxOverlapActors(this, TargetLocation, FVector{5,5,5}, ObjectTypes, ASnapingPoint::StaticClass(), ActorsToIgnore, OutActors);
+			if (OutActors.Num() > 0)
+			{
+				
+				currentpoint = Cast<ASnapingPoint>(OutActors[0]);
+				if (currentpoint->IsOcupide == false)
+				{
+					TargetLocation = currentpoint->SnapingPoint->GetComponentLocation();
+					createdBuilding->SetActorLocation(TargetLocation);
+					bIsOnSnapingPoint = true;
+					createdBuilding->EditCanBuildColor(bIsOnSnapingPoint);
+				}
+				
+			}
+			else
+			{
+				bIsOnSnapingPoint = false;
+				createdBuilding->SetActorLocation(TargetLocation);
+				createdBuilding->EditCanBuildColor(bIsOnSnapingPoint);
+			}
+
+		}
+		
 
 
 		if (bIsBuildModeActive)
@@ -42,15 +74,27 @@ void UBuildSystemComponent::BuildmodeTick()
 
 void UBuildSystemComponent::PlaceBuilding()
 {
-	if (bIsBuildModeActive && GameInstance->BuildGridManager->IsNodeGroupValid(currentNode, currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize))
+	if (bIsBuildModeActive && GameInstance->BuildGridManager->IsNodeGroupValid(currentNode, currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize) && createdBuilding->buildtype == EBuildType::Grid)
 	{
-		currentNode = GameInstance->BuildGridManager->GetClosestNode(Player->GetPlacablePoint(BuildRage, PlacableNormal),currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize);
+		
+		currentNode = GameInstance->BuildGridManager->GetClosestNode(Player->GetPlacablePoint(BuildRage, PlacableNormal), currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize);
 		createdBuilding->SetActorLocation(TargetLocation);
 		createdBuilding->SetupCreatedBuilding();
-		createdBuilding->BuildingPlaced(currentBuildingDAT->XGridSize,currentBuildingDAT->YGridSize, currentNode.id,currentNode.Location,currentNode);
+		createdBuilding->BuildingPlaced(currentBuildingDAT->XGridSize, currentBuildingDAT->YGridSize, currentNode.id, currentNode.Location, currentNode);
+		
 
 		createdBuilding = nullptr;
+		currentpoint = nullptr;
 		BuildmodeEnd();	
+	}
+	else if (createdBuilding->buildtype == EBuildType::Snappoint && bIsBuildModeActive && bIsOnSnapingPoint)
+	{
+		currentpoint->IsOcupide = true;
+		createdBuilding->SetActorLocation(TargetLocation);
+		createdBuilding->SetupCreatedBuilding();
+		createdBuilding = nullptr;
+		currentpoint = nullptr;
+		BuildmodeEnd();
 	}
 }
 
@@ -67,9 +111,9 @@ void UBuildSystemComponent::SwitchBuilding(int value)
 	{
 		currentID = 0;
 	}
-	else if (currentID > buildingList.Num())
+	else if (currentID > buildingList.Num()-1)
 	{
-		currentID = buildingList.Num();
+		currentID = buildingList.Num()-1;
 	}
 
 	currentBuildingDAT = buildingList[currentID];

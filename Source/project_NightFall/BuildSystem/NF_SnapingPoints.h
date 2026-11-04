@@ -13,6 +13,14 @@ public:
 
 	ASnapingPoint();
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY( EditAnywhere)
+	USceneComponent* Root = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	USceneComponent* SnapingPoint = nullptr;
+
+	UPROPERTY(EditAnywhere)
 	USphereComponent* SnapingPointRange = nullptr;
+
+	bool IsOcupide = false;
 };

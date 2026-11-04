@@ -3,6 +3,13 @@
 
 ASnapingPoint::ASnapingPoint()
 {
-	SnapingPointRange = CreateDefaultSubobject<USphereComponent>("blastRange");
-	SnapingPointRange->SetupAttachment(GetRootComponent());
+
+	Root = CreateDefaultSubobject<USceneComponent>("root");
+	RootComponent = Root;
+
+	SnapingPoint = CreateDefaultSubobject<USceneComponent>("snapingpoint");
+	SnapingPoint->SetupAttachment(Root);
+
+	SnapingPointRange = CreateDefaultSubobject<USphereComponent>("snaprange");
+	SnapingPointRange->SetupAttachment(Root);
 }

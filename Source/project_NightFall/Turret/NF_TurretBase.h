@@ -29,10 +29,10 @@ public:
 	UPROPERTY(EditInstanceOnly)
 	USceneComponent* Aimpoint = nullptr;
 
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY(EditInstanceOnly,BlueprintReadOnly)
 	USceneComponent* YRotPoint = nullptr;
 
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
 	USceneComponent* ZRotPoint= nullptr;
 
 	UPROPERTY(EditAnywhere)

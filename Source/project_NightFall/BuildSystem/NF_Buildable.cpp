@@ -8,3 +8,8 @@ void ABuildable::BuildingPlaced(int X, int Y, int nodeID, FVector nodepos, FNode
 	GI->BuildGridManager->SetNodesOcupide(X, Y, nodeID, nodepos,startNode);
 
 }
+
+void ABuildable::BuildingPlaced()
+{
+
+}
