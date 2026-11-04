@@ -58,7 +58,6 @@ void ANFProjectile::OnProjectileHit(UPrimitiveComponent* OverlappedComp, AActor*
 		
 		AActor* HitActor = OtherActor;
 		FString targetName = UKismetSystemLibrary::GetDisplayName(HitActor);
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Target = %s"), *targetName));
 		ANFProjectile* hitprojectile = Cast<ANFProjectile>(HitActor);
 		if (HitActor && hitprojectile == nullptr && HitActor != Owningplayer)
 		{

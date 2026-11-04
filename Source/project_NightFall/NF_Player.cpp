@@ -50,6 +50,7 @@ void ANF_Player::GiveAbilityToPlayer(bool bIsPrimaryAbility,UAbilityDataAsset* a
 			if (abilityDAT->abilityClass != primaryAbility)
 			{
 				primaryAbility = abilityDAT->abilityClass;
+				PrimaryAbilityDAT = abilityDAT;
 			}
 
 			primarySpecHandle = CurrentSpecHandle;
@@ -59,6 +60,7 @@ void ANF_Player::GiveAbilityToPlayer(bool bIsPrimaryAbility,UAbilityDataAsset* a
 			if (abilityDAT->abilityClass != secondaryAbility)
 			{
 				secondaryAbility = abilityDAT->abilityClass;
+				SecondaryAbilityDAT = abilityDAT;
 			}
 
 			secondarySpecHandle = CurrentSpecHandle;
@@ -102,13 +104,13 @@ void ANF_Player::BeginPlay()
 
 	if (AbilityComp)
 	{
-		if (PrimaryAbilityDAT)
+		if (StartPrimaryAbilityDAT)
 		{
-			GiveAbilityToPlayer(true, PrimaryAbilityDAT);
+			GiveAbilityToPlayer(true, StartPrimaryAbilityDAT);
 		}
-		if (SecondaryAbilityDAT)
+		if (StartSecondaryAbilityDAT)
 		{
-			GiveAbilityToPlayer(false, SecondaryAbilityDAT);
+			GiveAbilityToPlayer(false, StartSecondaryAbilityDAT);
 		}
 	}
 }
@@ -131,6 +133,11 @@ void ANF_Player::SetupPlayerInputComponent(UInputComponent* playerInputComponent
 
 		EnhancedInputComponent->BindAction(OpenBuildmodeAction, ETriggerEvent::Triggered, this, &ANF_Player::HandleStartBuildMode);
 
+		EnhancedInputComponent->BindAction(ActivateAbility1, ETriggerEvent::Triggered, this, &ANF_Player::handleActivateAbility1);
+		EnhancedInputComponent->BindAction(ActivateAbility2, ETriggerEvent::Triggered, this, &ANF_Player::HandleActivateAbility2);
+
+
+
 
 
 		if (AbilityComp && playerInputComponent)
@@ -149,9 +156,6 @@ void ANF_Player::SetupPlayerInputComponent(UInputComponent* playerInputComponent
 void ANF_Player::HandleMovemnt(const FInputActionValue& value)
 {
 	const FVector2D InputVector = value.Get<FVector2D>();
-
-	// If no input, do nothing
-	if (InputVector.IsZero()) return;
 
 	// Movement directions
 	const FRotator ControlRotation = GetControlRotation();
@@ -274,6 +278,17 @@ void ANF_Player::HandleStartBuildMode()
 		currentWeapon->ActivateWeapon();
 
 	}
+}
+
+void ANF_Player::handleActivateAbility1()
+{
+	AbilityComp->TryActivateAbilitiesByTag(PrimaryAbilityDAT->AbilityTag);
+}
+
+void ANF_Player::HandleActivateAbility2()
+{
+	AbilityComp->TryActivateAbilitiesByTag(SecondaryAbilityDAT->AbilityTag);
+
 }
 
 void ANF_Player::OnDamage()

@@ -66,10 +66,18 @@ public:
 
 	EPlayerEquipTyper EquipType;
 
-	UPROPERTY(EditAnywhere)
-	UAbilityDataAsset* PrimaryAbilityDAT = nullptr;
 
 	UPROPERTY(EditAnywhere)
+	UAbilityDataAsset* StartPrimaryAbilityDAT = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	UAbilityDataAsset* StartSecondaryAbilityDAT = nullptr;
+
+
+	UPROPERTY()
+	UAbilityDataAsset* PrimaryAbilityDAT = nullptr;
+
+	UPROPERTY()
 	UAbilityDataAsset* SecondaryAbilityDAT = nullptr;
 
 
@@ -138,6 +146,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* OpenBuildmodeAction;
 
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* ActivateAbility1;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* ActivateAbility2;
+
 
 	void BeginPlay()override;
 
@@ -153,7 +167,10 @@ protected:
 	void HandleEquipGravProjector();
 	void HandleEditGravTether(const FInputActionValue& value);
 	void HandleStartBuildMode();
+	void handleActivateAbility1();
+	void HandleActivateAbility2();
 
+	//Ability
 
 
 	//Weapon

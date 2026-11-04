@@ -11,6 +11,9 @@ class UAbilityDataAsset : public UDataAsset {
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UNF_AbilityBase> abilityClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FGameplayTagContainer AbilityTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString AbilityName;
